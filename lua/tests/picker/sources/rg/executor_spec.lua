@@ -22,9 +22,6 @@ describe("executor", function()
     job:sync()
     job:_shutdown(0, 2)
 
-    assert.are.same(
-      { "./baz.txt:bartestfoo" },
-      result
-    )
+    assert.are.same({ "./baz.txt:bartestfoo" }, result)
   end)
 end)

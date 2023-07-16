@@ -7,18 +7,22 @@ function M.range(a, b, step)
     a = 1
   end
   step = step or 1
-  local f =
-    step > 0 and
-    function(_, lastvalue)
-      local nextvalue = lastvalue + step
-      if nextvalue <= b then return nextvalue end
-    end or
-      step < 0 and
-      function(_, lastvalue)
+  local f = step > 0
+      and function(_, lastvalue)
         local nextvalue = lastvalue + step
-        if nextvalue >= b then return nextvalue end
-      end or
-    function(_, lastvalue) return lastvalue end
+        if nextvalue <= b then
+          return nextvalue
+        end
+      end
+    or step < 0 and function(_, lastvalue)
+      local nextvalue = lastvalue + step
+      if nextvalue >= b then
+        return nextvalue
+      end
+    end
+    or function(_, lastvalue)
+      return lastvalue
+    end
   return f, nil, a - step
 end
 
@@ -37,7 +41,7 @@ function M.get_marked_region(mark1, mark2, options)
     return pos1, pos2
   end
   local regtype = options.regtype or vim.fn.visualmode()
-  local selection = options.selection or (vim.o.selection ~= 'exclusive')
+  local selection = options.selection or (vim.o.selection ~= "exclusive")
 
   local pos1 = vim.fn.getpos(mark1)
   local pos2 = vim.fn.getpos(mark2)
@@ -47,7 +51,9 @@ function M.get_marked_region(mark1, mark2, options)
   local finish = { pos2[2] - 1, pos2[3] - 1 + pos2[4] }
 
   -- Return if start or finish are invalid
-  if start[2] < 0 or finish[1] < start[1] then return end
+  if start[2] < 0 or finish[1] < start[1] then
+    return
+  end
 
   local region = vim.region(bufnr, start, finish, regtype, selection)
   return region, start, finish
@@ -65,26 +71,28 @@ function M.get_visual_selection()
   }
 
   -- Return if not in visual mode
-  if visual_modes[vim.api.nvim_get_mode().mode] == nil then return end
+  if visual_modes[vim.api.nvim_get_mode().mode] == nil then
+    return
+  end
 
   local options = {}
   options.adjust = function(pos1, pos2)
     if vim.fn.visualmode() == "V" then
       pos1[3] = 1
-      pos2[3] = 2^31 - 1
+      pos2[3] = 2 ^ 31 - 1
     end
 
     if pos1[2] > pos2[2] then
       pos2[3], pos1[3] = pos1[3], pos2[3]
       return pos2, pos1
-    elseif pos1[2]==pos2[2] and pos1[3] > pos2[3] then
+    elseif pos1[2] == pos2[2] and pos1[3] > pos2[3] then
       return pos2, pos1
     else
       return pos1, pos2
     end
   end
 
-  local region, start, finish = M.get_marked_region('v', '.', options)
+  local region, start, finish = M.get_marked_region("v", ".", options)
 
   -- Compute the number of chars to get from the first line,
   -- because vim.region returns -1 as the ending col if the
@@ -99,12 +107,11 @@ function M.get_visual_selection()
 
   lines[1] = vim.fn.strpart(lines[1], region[start[1]][1], line1_end, true)
   if start[1] ~= finish[1] then
-    lines[#lines] =
-      vim.fn.strpart(
-        lines[#lines],
-        region[finish[1]][1],
-        region[finish[1]][2] - region[finish[1]][1]
-      )
+    lines[#lines] = vim.fn.strpart(
+      lines[#lines],
+      region[finish[1]][1],
+      region[finish[1]][2] - region[finish[1]][1]
+    )
   end
   return table.concat(lines)
 end
@@ -148,12 +155,16 @@ function M.t(str)
 end
 
 function M.imerge(a, b)
-  for _,v in ipairs(b) do table.insert(a, v) end
+  for _, v in ipairs(b) do
+    table.insert(a, v)
+  end
   return a
 end
 
 function M.merge(a, b)
-  for k,v in pairs(b) do a[k] = v end
+  for k, v in pairs(b) do
+    a[k] = v
+  end
   return a
 end
 
@@ -202,7 +213,7 @@ end
 function M.vim_range_from_mark(range)
   local start_row, start_col, end_row, end_col = unpack(range)
 
-  return { start_row, start_col + 1, end_row, end_col + 1}
+  return { start_row, start_col + 1, end_row, end_col + 1 }
 end
 
 -- vim ranges are 1, 1 indexed
@@ -228,7 +239,9 @@ function M.map_buffer(buffer, range, func, opts)
   end
 
   local line_content = function(row, scol, ecol)
-    if opts.linewise then return lines[row] end
+    if opts.linewise then
+      return lines[row]
+    end
 
     return string.sub(lines[row], scol, ecol)
   end
@@ -237,7 +250,7 @@ function M.map_buffer(buffer, range, func, opts)
     func(line_content(1, start_col, end_col), start_row, start_col, end_col)
   else
     -- first line
-    func(line_content(1, start_col, - 1), start_row, start_col, -1)
+    func(line_content(1, start_col, -1), start_row, start_col, -1)
 
     -- middle
     for i in M.range(2, #lines - 1) do
@@ -256,7 +269,7 @@ function M.highlight_range(ns, range, opts)
   local start_row, start_col, end_row, end_col = unpack(range)
   local hl_group = opts.hl_group or "Visual"
 
-  vim.highlight.range(ns, 0, hl_group, {start_row, start_col}, {end_row, end_col},{})
+  vim.highlight.range(ns, 0, hl_group, { start_row, start_col }, { end_row, end_col }, {})
 end
 
 function M.seq(a, b)
@@ -277,7 +290,7 @@ function M.default_table(callable)
       end
 
       return rawget(t, k)
-    end
+    end,
   })
 end
 

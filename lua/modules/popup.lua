@@ -3,7 +3,7 @@ local event = require("nui.utils.autocmd").event
 local utils = require("utils")
 
 local delete_commands = function(...)
-  local groups = {...}
+  local groups = { ... }
   for _, group in ipairs(groups) do
     vim.api.nvim_create_augroup(group, { clear = true })
   end
@@ -17,8 +17,8 @@ local popup_config = function(command, buf)
       style = "single",
       text = {
         top = command,
-        top_align = "center"
-      }
+        top_align = "center",
+      },
     },
     position = "35%",
     size = {
@@ -26,7 +26,7 @@ local popup_config = function(command, buf)
       height = "80%",
     },
     bufnr = buf,
-    relative = "editor"
+    relative = "editor",
   }
 end
 
@@ -42,7 +42,9 @@ local function setup_popup_for_buffer(popup, buf, delete_on_close)
     end
   end
 
-  local defer_close = function() vim.schedule(close) end
+  local defer_close = function()
+    vim.schedule(close)
+  end
 
   popup:map("n", "q", close, {}, true)
   popup:on(event.WinLeave, defer_close, { nested = true })
@@ -70,14 +72,13 @@ local create_popup_for_buffer = function(buf, command, delete_on_close)
   vim.api.nvim_create_augroup("_popup_window_local_commands", { clear = true })
 
   vim.api.nvim_create_autocmd("BufWinEnter", {
-      group = "_popup_window_local_commands",
-      callback = function()
-        if vim.api.nvim_get_current_win() == popup.winid then
-          setup_popup_for_buffer(popup, vim.fn.expand("<abuf>"), delete_on_close)
-        end
+    group = "_popup_window_local_commands",
+    callback = function()
+      if vim.api.nvim_get_current_win() == popup.winid then
+        setup_popup_for_buffer(popup, vim.fn.expand("<abuf>"), delete_on_close)
       end
-    }
-  )
+    end,
+  })
 
   return popup
 end
@@ -85,7 +86,9 @@ end
 local close_split = function()
   local win = vim.api.nvim_get_current_win()
 
-  if utils.is_floating(win) then return end
+  if utils.is_floating(win) then
+    return
+  end
 
   vim.api.nvim_win_close(win, false)
   vim.cmd("exe _popup_next_restore_win_cmd")
@@ -97,26 +100,32 @@ local popup_next = function(command)
   vim.api.nvim_create_augroup("_popup_autocommands", { clear = true })
 
   vim.api.nvim_create_autocmd("WinEnter", {
-    nested = true, once = true, group = "_popup_autocommands",
+    nested = true,
+    once = true,
+    group = "_popup_autocommands",
     callback = function()
       if utils.is_floating(vim.api.nvim_get_current_win()) then
         return
       end
       create_popup_for_buffer(vim.fn.expand("<abuf>"), command)
-    end
+    end,
   })
 
   vim.api.nvim_create_autocmd("WinNew", {
-    nested = true, once = true, group = "_popup_autocommands",
+    nested = true,
+    once = true,
+    group = "_popup_autocommands",
     callback = function()
       if utils.is_floating(vim.api.nvim_get_current_win()) then
         return
       end
       close_split()
-    end
+    end,
   })
 
-  pcall(function() vim.cmd(command) end)
+  pcall(function()
+    vim.cmd(command)
+  end)
 
   delete_commands("_popup_autocommands")
 end
@@ -135,17 +144,17 @@ local popup_current = function(command)
 end
 
 local setup = function()
-  vim.cmd [[
+  vim.cmd([[
     command! -complete=command -nargs=+ PopupNext :lua require("plenary.reload").reload_module("modules.popup", true); require("plenary.reload").reload_module("popup", true); require("modules.popup").popup_next(<q-args>)
-  ]]
+  ]])
 
-  vim.cmd [[
+  vim.cmd([[
     command! -nargs=? PopupCurrent :lua require("plenary.reload").reload_module("modules.popup", true); require("modules.popup").popup_current(<q-args>)
-  ]]
+  ]])
 end
 
 return {
   popup_next = popup_next,
   popup_current = popup_current,
-  setup = setup
+  setup = setup,
 }

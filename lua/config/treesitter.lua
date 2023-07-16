@@ -4,7 +4,7 @@ treesitter.setup({
   sync_install = false,
   auto_install = true,
   context_commentstring = {
-    enable = true
+    enable = true,
   },
   autopairs = {
     enable = true,
@@ -30,7 +30,7 @@ treesitter.setup({
   },
   highlight = {
     enable = true,
-    additional_vim_regex_highlighting = true
+    additional_vim_regex_highlighting = true,
   },
   incremental_selection = {
     enable = true,

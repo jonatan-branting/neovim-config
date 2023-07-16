@@ -20,7 +20,7 @@ function M.setup()
       })
     end, hover_time)
 
-     vim.api.nvim_exec_autocmds("User", {
+    vim.api.nvim_exec_autocmds("User", {
       pattern = "MouseHoverLeave",
       data = { position = vim.fn.getmousepos() },
     })

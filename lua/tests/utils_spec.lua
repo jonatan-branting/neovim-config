@@ -5,16 +5,13 @@ local Range = require("modules.lib.range")
 
 describe(".map_buffer", function()
   it("executes func over a buffer range", function()
-    setup_buffer(
-      {
-        "line 1",
-        "line 2",
-        "line 3",
-        "",
-        "line 5",
-      },
-      "lua"
-    )
+    setup_buffer({
+      "line 1",
+      "line 2",
+      "line 3",
+      "",
+      "line 5",
+    }, "lua")
 
     local range = Range:new({ 1, 1 }, { 5, 8 })
 

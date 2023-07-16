@@ -40,6 +40,6 @@ describe("producer", function()
 
     local result = producer(prompt)
 
-    assert.are.same({ "bar.*",  "--iglob", "**!foo**" }, result)
+    assert.are.same({ "bar.*", "--iglob", "**!foo**" }, result)
   end)
 end)

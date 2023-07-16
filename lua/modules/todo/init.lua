@@ -1,21 +1,22 @@
 local Path = require("plenary.path")
-local M =  {}
+local M = {}
 
 function M.generate_template(filename)
   return string.format(
     [[
 # %s
 1.
-    ]], filename)
+    ]],
+    filename
+  )
 end
 
 M.options = {
   todo_dir = "~/git/todos",
   window_cmd = "botright split",
   template_func = M.generate_template,
-  window_height = 15
+  window_height = 15,
 }
-
 
 function M.open_window_with_file(path)
   vim.cmd(string.format([[ %s %s ]], M.options.window_cmd, path))
@@ -25,7 +26,7 @@ function M.open_window_with_file(path)
 end
 
 local function maybe_create_file(path)
-  path:touch({parents = true})
+  path:touch({ parents = true })
 
   local file_is_empty = #path:read() == 0
 
@@ -35,10 +36,8 @@ local function maybe_create_file(path)
 end
 
 function M.open_branch_todo()
-  local path = Path:new(
-    Path:new(M.options.todo_dir):expand(),
-    M.current_repository_branch_filename()
-  )
+  local path =
+    Path:new(Path:new(M.options.todo_dir):expand(), M.current_repository_branch_filename())
 
   maybe_create_file(path)
 

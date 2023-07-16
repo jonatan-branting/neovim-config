@@ -19,20 +19,20 @@ vim.opt.completeopt = "menu,menuone,noinsert"
 
 local compare = cmp.config.compare
 
-local types = require('cmp.types')
+local types = require("cmp.types")
 
 local tab = function(fallback)
   if cmp.visible() then
-    cmp.confirm({select = true})
+    cmp.confirm({ select = true })
   else
     fallback()
   end
 end
 
 cmp.setup({
-  enabled = function ()
+  enabled = function()
     return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
-    or require("cmp_dap").is_dap_buffer()
+      or require("cmp_dap").is_dap_buffer()
   end,
   formatting = {
     format = function(entry, vim_item)
@@ -47,17 +47,17 @@ cmp.setup({
       })[entry.source.name]
 
       vim_item.dup = ({
-        nvim_lsp = 1
+        nvim_lsp = 1,
       })[entry.source.name] or 0
 
       return vim_item
-    end
+    end,
   },
   -- view = {
   --   entries = "wildmenu",
   -- },
   experimental = {
-    ghost_text = false
+    ghost_text = false,
   },
   completion = {
     -- keyword_length = 1,
@@ -101,7 +101,7 @@ cmp.setup({
       i = tab,
       c = function()
         cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-      end
+      end,
     }),
     ["<s-tab>"] = cmp.mapping({
       i = function(fallback)
@@ -115,7 +115,7 @@ cmp.setup({
       end,
       c = function()
         cmp.select_prev_item({ behaviour = cmp.SelectBehavior.Insert })
-      end
+      end,
     }),
     ["<cr>"] = cmp.mapping(function(fallback)
       if cmp.get_selected_entry() ~= nil then
@@ -149,7 +149,7 @@ cmp.setup({
         fallback()
       end
     end),
-    ["<down>"] = cmp.mapping( function(fallback)
+    ["<down>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
       else
@@ -159,22 +159,25 @@ cmp.setup({
   },
   sources = {
     -- { name = "copilot" },
-    { name = "nvim_lsp", entry_filter = function(entry, ctx)
-      local kind = types.lsp.CompletionItemKind[entry:get_kind()]
+    {
+      name = "nvim_lsp",
+      entry_filter = function(entry, ctx)
+        local kind = types.lsp.CompletionItemKind[entry:get_kind()]
 
-      if kind == "Keyword" then
-        return false
-      elseif kind == "Text" then
-        return false
-      end
-      return true
-    end},
+        if kind == "Keyword" then
+          return false
+        elseif kind == "Text" then
+          return false
+        end
+        return true
+      end,
+    },
     { name = "dap" },
     { name = "git" },
     -- { name = "commit" },
     { name = "buffer" },
     { name = "path" },
-  }
+  },
 })
 
 cmp.setup.cmdline("?", {
@@ -183,11 +186,12 @@ cmp.setup.cmdline("?", {
   -- },
   sources = cmp.config.sources({
     {
-      { name = 'buffer', max_item_count = 10 }
-    }, {
-      { name = 'nvim_lsp_document_symbol', max_item_count = 10 }
-    }
-  })
+      { name = "buffer", max_item_count = 10 },
+    },
+    {
+      { name = "nvim_lsp_document_symbol", max_item_count = 10 },
+    },
+  }),
 })
 
 cmp.setup.cmdline("/", {
@@ -196,11 +200,12 @@ cmp.setup.cmdline("/", {
   -- },
   sources = cmp.config.sources({
     {
-      { name = 'buffer', max_item_count = 10 }
-    }, {
-      { name = 'nvim_lsp_document_symbol', max_item_count = 10 }
-    }
-  })
+      { name = "buffer", max_item_count = 10 },
+    },
+    {
+      { name = "nvim_lsp_document_symbol", max_item_count = 10 },
+    },
+  }),
 })
 
 cmp.setup.cmdline(":", {
@@ -209,7 +214,6 @@ cmp.setup.cmdline(":", {
   -- },
   sources = cmp.config.sources({
     { name = "path", max_item_count = 7 },
-    { name = "cmdline", max_item_count = 15 }
-  })
+    { name = "cmdline", max_item_count = 15 },
+  }),
 })
-

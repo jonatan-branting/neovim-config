@@ -17,7 +17,9 @@ local function hex_to_rgb(hex_str)
 end
 
 function utils.rgb_to_hex(rgb)
-  if not rgb then return nil end
+  if not rgb then
+    return nil
+  end
 
   return string.format("#%06x", rgb)
 end
@@ -91,7 +93,9 @@ function utils.get_highlight(name)
     return hl
   end)
 
-  if not success then print("error", result) end
+  if not success then
+    print("error", result)
+  end
 
   return result
 end

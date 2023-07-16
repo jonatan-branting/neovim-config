@@ -86,34 +86,28 @@ function Terminal:__setup_autocmds()
   --     end
   --   }
   -- )
-  vim.api.nvim_create_autocmd(
-    "User",
-    {
-      group = self.autocmd_group,
-      buffer = self.bufnr,
-      pattern = "TerminalCmdSent",
-      callback = function(opts)
-        local term = require("modules.term"):get_terminal(opts.data.idx)
-        vim.schedule(function()
-          term:scroll_to_bottom()
-        end)
-        -- -- print("TerminalCmdSent", vim.inspect(opts))
-        -- vim.schedule(function() self:scroll_to_bottom() end)
-      end
-    }
-  )
-  vim.api.nvim_create_autocmd(
-    "User",
-    {
-      group = self.autocmd_group,
-      buffer = self.bufnr,
-      callback = function(opts)
-        self.winnr = nil
-        -- -- print("TerminalCmdSent", vim.inspect(opts))
-        -- vim.schedule(function() self:scroll_to_bottom() end)
-      end
-    }
-  )
+  vim.api.nvim_create_autocmd("User", {
+    group = self.autocmd_group,
+    buffer = self.bufnr,
+    pattern = "TerminalCmdSent",
+    callback = function(opts)
+      local term = require("modules.term"):get_terminal(opts.data.idx)
+      vim.schedule(function()
+        term:scroll_to_bottom()
+      end)
+      -- -- print("TerminalCmdSent", vim.inspect(opts))
+      -- vim.schedule(function() self:scroll_to_bottom() end)
+    end,
+  })
+  vim.api.nvim_create_autocmd("User", {
+    group = self.autocmd_group,
+    buffer = self.bufnr,
+    callback = function(opts)
+      self.winnr = nil
+      -- -- print("TerminalCmdSent", vim.inspect(opts))
+      -- vim.schedule(function() self:scroll_to_bottom() end)
+    end,
+  })
   -- vim.api.nvim_create_autocmd(
   --   "BufDelete",
   --   {
@@ -208,12 +202,9 @@ function Terminal:send(cmd, interactive)
 end
 
 function Terminal:scroll_to_bottom()
-  vim.api.nvim_buf_call(
-    self.bufnr,
-    function()
-      vim.cmd("normal! G")
-    end
-  )
+  vim.api.nvim_buf_call(self.bufnr, function()
+    vim.cmd("normal! G")
+  end)
 end
 
 function Terminal:close()
@@ -265,7 +256,8 @@ function Terminal:already_displayed()
 end
 
 function Terminal:focused()
-  return vim.api.nvim_get_current_win() == self.winnr and vim.tbl_contains(self:windows(), self.winnr)
+  return vim.api.nvim_get_current_win() == self.winnr
+    and vim.tbl_contains(self:windows(), self.winnr)
 end
 
 function Terminal:toggle()
@@ -323,12 +315,15 @@ end
 
 -- test ---
 -- kill all terminal buffers
-pcall(function() vim.cmd("bdelete! term://*") end)
-pcall(function() vim.cmd("bdelete! [No Name]:*") end)
+pcall(function()
+  vim.cmd("bdelete! term://*")
+end)
+pcall(function()
+  vim.cmd("bdelete! [No Name]:*")
+end)
 
 Terminal.setup({
   shell = "fish",
 })
 
 return Terminal
-

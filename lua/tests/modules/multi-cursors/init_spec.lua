@@ -8,13 +8,10 @@ local right_text_object = require("modules.multi-cursors.text_objects.right")
 
 describe("a multi-cursor session", function()
   before_each(function()
-    setup_buffer(
-      {
-        "test_text_row_1",
-        "test_text_row_2",
-      },
-      "lua"
-    )
+    setup_buffer({
+      "test_text_row_1",
+      "test_text_row_2",
+    }, "lua")
 
     MC.setup()
 
@@ -24,20 +21,13 @@ describe("a multi-cursor session", function()
 
     _G.get_session():add_cursor({ 1, 1 })
     _G.get_session():add_cursor({ 2, 1 })
-
   end)
 
   it("can move multiple cursors", function()
     vim.cmd("normal l")
 
-    assert.are.same(
-      { 1, 2 },
-      _G.get_session().cursors[1].pos:get()
-    )
-    assert.are.same(
-      { 2, 2 },
-      _G.get_session().cursors[2].pos:get()
-    )
+    assert.are.same({ 1, 2 }, _G.get_session().cursors[1].pos:get())
+    assert.are.same({ 2, 2 }, _G.get_session().cursors[2].pos:get())
   end)
 
   it("can execute operators on multiple cursors", function()
@@ -56,13 +46,10 @@ describe("#setup", function()
   end)
 
   it("adds a cursor at the current cursor position", function()
-    setup_buffer(
-      {
-        "test_text_row_1",
-        "test_text_row_2",
-      },
-      "lua"
-    )
+    setup_buffer({
+      "test_text_row_1",
+      "test_text_row_2",
+    }, "lua")
     vim.api.nvim_win_set_cursor(0, { 2, 4 })
 
     MC.setup({ add_cursor = true })

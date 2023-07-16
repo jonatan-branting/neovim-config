@@ -1,6 +1,3 @@
-require('bqf').setup(
-  {
-    auto_enable = true
-  }
-)
-
+require("bqf").setup({
+  auto_enable = true,
+})

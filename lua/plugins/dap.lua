@@ -4,7 +4,7 @@ if not ok then
   return
 end
 
-require("nvim-dap-virtual-text").setup {
+require("nvim-dap-virtual-text").setup({
   enabled = true,
   enabled_commands = true,
   highlight_changed_variables = true,
@@ -13,20 +13,20 @@ require("nvim-dap-virtual-text").setup {
   commented = true,
   only_first_definition = false,
   all_references = false,
-  filter_references_pattern = '<module',
+  filter_references_pattern = "<module",
   -- experimental features:
-  virt_text_pos = 'eol',
+  virt_text_pos = "eol",
   all_frames = false,
   virt_lines = false,
-  virt_text_win_col = nil
-}
+  virt_text_win_col = nil,
+})
 
-dap.set_log_level('TRACE');
+dap.set_log_level("TRACE")
 dap.defaults.fallback.terminal_win_cmd = "80vsplit new"
 dap.defaults.fallback.auto_continue_if_many_stopped = false
 
-vim.fn.sign_define('DapBreakpoint', {text='*'})
-vim.fn.sign_define('DapStopped', {text='>'})
+vim.fn.sign_define("DapBreakpoint", { text = "*" })
+vim.fn.sign_define("DapStopped", { text = ">" })
 
 dap.adapters.ruby = function(callback, config)
   local handle
@@ -37,8 +37,8 @@ dap.adapters.ruby = function(callback, config)
   local server = config.server or "127.0.0.1"
 
   local opts = {
-    stdio = {nil, stdout, stderr},
-    args = {"--open", "--port", port, "-c", "--", config.program, config.args},
+    stdio = { nil, stdout, stderr },
+    args = { "--open", "--port", port, "-c", "--", config.program, config.args },
     detached = false,
   }
 
@@ -47,11 +47,11 @@ dap.adapters.ruby = function(callback, config)
     stdout:close()
 
     if code ~= 0 then
-      print('rdbg exited with code', code)
+      print("rdbg exited with code", code)
     end
   end)
 
-  assert(handle, 'Error running rdbg: ' .. tostring(pid_or_err))
+  assert(handle, "Error running rdbg: " .. tostring(pid_or_err))
 
   local on_read = function(err, chunk)
     assert(not err, err)
@@ -59,9 +59,8 @@ dap.adapters.ruby = function(callback, config)
       return
     end
 
-
     vim.schedule(function()
-      require('dap.repl').append(chunk)
+      require("dap.repl").append(chunk)
 
       for _, c in pairs(require("dap").listeners.after["event_output"]) do
         c(nil, chunk)
@@ -91,7 +90,7 @@ dap.configurations.rspec = {
     args = {
       "${file}",
     },
-  }
+  },
 }
 dap.configurations.ruby = {
   {
@@ -103,5 +102,5 @@ dap.configurations.ruby = {
     args = {
       "${file}",
     },
-  }
+  },
 }

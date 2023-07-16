@@ -14,7 +14,7 @@ require("neotest").setup({
     passed = "●",
     running = "●",
     failed = "●",
-    unknown = "●"
+    unknown = "●",
   },
   status = {
     signs = true,
@@ -31,8 +31,7 @@ require("neotest").setup({
     open = false,
   },
   consumers = {
-    function(client)
-    end
+    function(client) end,
   },
   adapters = {
     require("neotest-plenary"),

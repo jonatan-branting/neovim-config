@@ -6,12 +6,9 @@ local delete = require("modules.multi-cursors.operators.delete")
 describe("some basics", function()
   describe("single line", function()
     before_each(function()
-      setup_buffer(
-        {
-          "local this_is_a_test = true",
-        },
-        "lua"
-      )
+      setup_buffer({
+        "local this_is_a_test = true",
+      }, "lua")
     end)
 
     it("deletes the range from the buffer", function()
@@ -29,25 +26,19 @@ describe("some basics", function()
 
       local result = delete(range)
 
-      assert.are.same(
-        {
-          "this_",
-        },
-        result
-      )
+      assert.are.same({
+        "this_",
+      }, result)
     end)
   end)
 
   describe("multiple lines", function()
     before_each(function()
-      setup_buffer(
-        {
-          "local line_1 = 1",
-          "line_2 = 2",
-          "local line_3 = 3",
-        },
-        "lua"
-      )
+      setup_buffer({
+        "local line_1 = 1",
+        "line_2 = 2",
+        "local line_3 = 3",
+      }, "lua")
     end)
 
     it("deletes the range from the buffer", function()
@@ -66,14 +57,11 @@ describe("some basics", function()
 
       local result = delete(range)
 
-      assert.are.same(
-        {
-          " = 1",
-          "line_2 = 2",
-          "local line_3"
-        },
-        result
-      )
+      assert.are.same({
+        " = 1",
+        "line_2 = 2",
+        "local line_3",
+      }, result)
     end)
   end)
 end)

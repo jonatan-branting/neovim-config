@@ -2,7 +2,9 @@ local Position = require("lib.position")
 local Range = {}
 
 local function get_normalized_range(pos1, pos2)
-  if pos2 > pos1 then return { pos1, pos2 } end
+  if pos2 > pos1 then
+    return { pos1, pos2 }
+  end
 
   return { pos2, pos1 }
 end
@@ -24,7 +26,7 @@ function Range:new(pos1, pos2)
 
   local from, to = unpack(get_normalized_range(pos1, pos2))
 
-  local position = { from = from, to = to}
+  local position = { from = from, to = to }
   setmetatable(position, self)
   self.__index = self
 

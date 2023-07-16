@@ -82,5 +82,3 @@ function Enumeratable:first()
 end
 
 return Enumeratable
-
-

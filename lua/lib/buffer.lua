@@ -7,9 +7,9 @@ function Buffer.current()
 end
 
 function Buffer.all()
-  return Enumeratable
-    :new(vim.api.nvim_list_bufs())
-    :map(function(bufnr) return Buffer:new(bufnr) end)
+  return Enumeratable:new(vim.api.nvim_list_bufs()):map(function(bufnr)
+    return Buffer:new(bufnr)
+  end)
 end
 
 function Buffer:new(bufnr)
@@ -26,10 +26,13 @@ end
 function Buffer:windows()
   local Window = require("window")
 
-  return Enumeratable
-    :new(vim.api.nvim_list_wins())
-    :select(function(winnr) return vim.api.nvim_win_get_buf(winnr) == self.bufnr end)
-    :map(function(winnr) return Window:new(winnr) end)
+  return Enumeratable:new(vim.api.nvim_list_wins())
+    :select(function(winnr)
+      return vim.api.nvim_win_get_buf(winnr) == self.bufnr
+    end)
+    :map(function(winnr)
+      return Window:new(winnr)
+    end)
 end
 
 function Buffer:open()

@@ -38,8 +38,7 @@ require("winshift").setup({
         buftype = {},
         bufname = {},
       },
-      filter_func = function()
-      end,
+      filter_func = function() end,
     })
   end,
 })

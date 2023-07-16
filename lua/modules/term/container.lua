@@ -1,5 +1,3 @@
 local Container = {}
 
-function Container:new()
-
-end
+function Container:new() end

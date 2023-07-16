@@ -7,18 +7,18 @@ require("mini.indentscope").setup({
     -- and total step numbers, returns wait time (in ms). See
     -- |MiniIndentscope.gen_animation()| for builtin options. To not use
     -- animation, supply `require('mini.indentscope').gen_animation('none')`.
-    animation = require("mini.indentscope").gen_animation.none()
+    animation = require("mini.indentscope").gen_animation.none(),
   },
 
   -- Module mappings. Use `''` (empty string) to disable one.
   mappings = {
     -- Textobjects
-    object_scope = 'is',
-    object_scope_with_border = 'as',
+    object_scope = "is",
+    object_scope_with_border = "as",
 
     -- Motions (jump to respective border line; if not present - body line)
-    goto_top = 'gss',
-    goto_bottom = 'ges',
+    goto_top = "gss",
+    goto_bottom = "ges",
   },
 
   -- Options which control computation of scope. Buffer local values can be
@@ -26,7 +26,7 @@ require("mini.indentscope").setup({
   options = {
     -- Type of scope's border: which line(s) with smaller indent to
     -- categorize as border. Can be one of: 'both', 'top', 'bottom', 'none'.
-    border = 'both',
+    border = "both",
 
     -- Whether to use cursor column when computing reference indent. Useful to
     -- see incremental scopes with horizontal cursor movements.
@@ -39,6 +39,5 @@ require("mini.indentscope").setup({
   },
 
   -- Which character to use for drawing scope indicator
-  symbol = '>',
-}
-)
+  symbol = ">",
+})

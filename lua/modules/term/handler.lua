@@ -12,9 +12,7 @@ function Handler:new()
   return handler
 end
 
-function Handler:toggle(terminal)
-
-end
+function Handler:toggle(terminal) end
 
 function Handler:get_terminal(idx)
   idx = idx or #self.terminals

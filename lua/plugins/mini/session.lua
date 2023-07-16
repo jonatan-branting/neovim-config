@@ -1,4 +1,4 @@
-require('mini.sessions').setup({
+require("mini.sessions").setup({
   -- Whether to read latest session if Neovim opened without file arguments
   autoread = false,
 
@@ -9,7 +9,7 @@ require('mini.sessions').setup({
   directory = "~/.local/share/nvim/sessions/",
 
   -- File for local session (use `''` to disable)
-  file = 'Session.vim',
+  file = "Session.vim",
 
   -- Whether to force possibly harmful actions (meaning depends on function)
   force = { read = false, write = true, delete = false },

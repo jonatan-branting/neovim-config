@@ -8,7 +8,7 @@ local Position = {}
 -- a Row is just 2 positions with helper methods
 
 function Position:new(row, col)
-  local position = { extmark = nil, _row = row, _col = col, extmark_opts = {}}
+  local position = { extmark = nil, _row = row, _col = col, extmark_opts = {} }
   setmetatable(position, self)
   self.__index = self
 
@@ -36,20 +36,24 @@ function Position:__le(other)
 end
 
 function Position:anchor(ns, bufnr, opts)
-  if self.extmark then return  self.extmark end
+  if self.extmark then
+    return self.extmark
+  end
 
   self.extmark_opts = opts
   self.extmark = {
     id = vim.api.nvim_buf_set_extmark(bufnr, ns, self._row - 1, self._col - 1, opts),
     bufnr = bufnr,
-    ns = ns
+    ns = ns,
   }
 
   return self.extmark.id
 end
 
 function Position:is_anchored(bufnr)
-  if not self.extmark then return false end
+  if not self.extmark then
+    return false
+  end
 
   -- TODO this does not take bufnr into account
   return true
@@ -60,8 +64,9 @@ function Position:get()
     return { self._row, self._col }
   end
 
-  local row, col = unpack(vim.api.nvim_buf_get_extmark_by_id(
-    self.extmark.bufnr, self.extmark.ns, self.extmark.id, {}))
+  local row, col = unpack(
+    vim.api.nvim_buf_get_extmark_by_id(self.extmark.bufnr, self.extmark.ns, self.extmark.id, {})
+  )
   return { row + 1, col + 1 }
 end
 
@@ -73,7 +78,9 @@ end
 function Position:update(position)
   self._row, self._col = unpack(position)
 
-  if not self.extmark then return end
+  if not self.extmark then
+    return
+  end
 
   local bufnr = 0
   local ns = self.extmark.ns

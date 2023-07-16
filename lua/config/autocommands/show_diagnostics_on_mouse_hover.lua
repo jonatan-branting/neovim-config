@@ -103,16 +103,12 @@ vim.api.nvim_create_autocmd("User", {
     end
 
     local bufnr = window:buffer().bufnr
-    local line_diagnostics = Enumeratable:new(
-      vim.diagnostic.get(bufnr, { lnum = cursor_win_pos[1] })
-    )
+    local line_diagnostics =
+      Enumeratable:new(vim.diagnostic.get(bufnr, { lnum = cursor_win_pos[1] }))
 
-    local diagnostics = line_diagnostics
-      :select(
-        function(diagnostic)
-          return diagnostic.col <= col + 1 and diagnostic.end_col + 1 >= col
-        end
-      )
+    local diagnostics = line_diagnostics:select(function(diagnostic)
+      return diagnostic.col <= col + 1 and diagnostic.end_col + 1 >= col
+    end)
 
     if diagnostics:any() then
       create_diagnostics_window_at_screen_pos(diagnostics:to_table(), cursor_screen_pos)

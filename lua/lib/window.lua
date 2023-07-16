@@ -7,15 +7,15 @@ function Window.current()
 end
 
 function Window.all()
-  return Enumeratable
-    :new(vim.api.nvim_list_wins())
-    :map(function(winnr) return Window:new(winnr) end)
+  return Enumeratable:new(vim.api.nvim_list_wins()):map(function(winnr)
+    return Window:new(winnr)
+  end)
 end
 
 function Window.at_pos(pos)
-  return Window
-    :all()
-    :find(function(window) return window:contains_pos(pos) end)
+  return Window:all():find(function(window)
+    return window:contains_pos(pos)
+  end)
 end
 
 function Window:new(winnr)
@@ -52,7 +52,12 @@ function Window:contains_pos(pos)
     vim.api.nvim_win_get_width(self.winnr),
   })
 
-  if win_row <= row and row <= win_row + win_height and win_col <= col and col <= win_col + win_width then
+  if
+    win_row <= row
+    and row <= win_row + win_height
+    and win_col <= col
+    and col <= win_col + win_width
+  then
     return true
   end
 

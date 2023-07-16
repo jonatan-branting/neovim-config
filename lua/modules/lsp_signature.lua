@@ -14,7 +14,6 @@ local function ts_parser_exists(buf)
   return success
 end
 local function get_node_at_position(buf, ignore_injected_langs, col, row)
-
   local root_lang_tree = vim.treesitter.get_parser(buf)
   if not root_lang_tree then
     return
@@ -45,7 +44,9 @@ local get_all_sibling_nodes = function(node)
   local n = node
   while true do
     n = ts_utils.get_next_node(n, false, false)
-    if not n then break end
+    if not n then
+      break
+    end
 
     table.insert(next_nodes, n)
   end
@@ -54,7 +55,9 @@ local get_all_sibling_nodes = function(node)
   local n = node
   while true do
     n = ts_utils.get_previous_node(n, false, false)
-    if not n then break end
+    if not n then
+      break
+    end
 
     table.insert(prev_nodes, n)
   end
@@ -62,20 +65,26 @@ local get_all_sibling_nodes = function(node)
   return {
     unpack(prev_nodes),
     node,
-    unpack(next_nodes)
+    unpack(next_nodes),
   }
 end
 
 local ts_in_signature = function(buf, context)
-  if not ts_parser_exists(buf) then return end
+  if not ts_parser_exists(buf) then
+    return
+  end
 
   local position = context.params.position
 
   local requested_node = get_node_at_position(buf, true, position.line, position.character - 1)
-  if not requested_node then return false end
+  if not requested_node then
+    return false
+  end
 
   local cursor_node = ts_utils.get_node_at_cursor()
-  if not cursor_node then return false end
+  if not cursor_node then
+    return false
+  end
 
   -- print(position.character, position.line, requested_node:type(), cursor_node:type())
   if requested_node == cursor_node then
@@ -127,7 +136,7 @@ local function create_popup(ctx)
     relative = "editor",
     size = {
       width = "100%",
-      height = 1
+      height = 1,
     },
     position = {
       row = "100%",
@@ -136,7 +145,6 @@ local function create_popup(ctx)
     buf_options = {
       modifiable = false,
       readonly = true,
-
     },
     win_options = {
       winblend = 12,
@@ -146,11 +154,11 @@ local function create_popup(ctx)
 
   local events = { "CursorMoved", "CursorMovedI", "InsertCharPre" }
 
-  local group = augroup("LspSignatureMoved" .. popup.bufnr, {clear = true})
+  local group = augroup("LspSignatureMoved" .. popup.bufnr, { clear = true })
 
   popup:on(require("nui.utils.autocmd").event.WinEnter, function()
     vim.opt_local.winbar = nil
-  end, {once = true})
+  end, { once = true })
 
   autocmd(events, {
     group = group,
@@ -160,10 +168,12 @@ local function create_popup(ctx)
         if not ts_in_signature(data.buf, ctx) then
           popup:unmount()
 
-          pcall(function() vim.api.nvim_del_augroup_by_id(group) end)
+          pcall(function()
+            vim.api.nvim_del_augroup_by_id(group)
+          end)
         end
       end)
-    end
+    end,
   })
 
   return popup
@@ -172,9 +182,10 @@ end
 local get_signature_handler_for_client = function(client, buf)
   return function(err, result, ctx, config)
     local _, err = pcall(function()
-
       local signature = result.signatures[1]
-      if not signature then return end
+      if not signature then
+        return
+      end
 
       local popup = create_popup(ctx)
       local active_node = (signature.activeParameter and signature.activeParameter + 1)
@@ -191,12 +202,11 @@ local get_signature_handler_for_client = function(client, buf)
           vim.api.nvim_buf_set_lines(popup.bufnr, 0, 1, false, {
             "..." .. string.sub(signature.label, total_diff, #signature.label),
           })
-          highlight_signature(popup.bufnr, active_node, signature, total_diff - 4) -- ... + 
+          highlight_signature(popup.bufnr, active_node, signature, total_diff - 4) -- ... +
         else
           vim.api.nvim_buf_set_lines(popup.bufnr, 0, 1, false, { signature.label })
           highlight_signature(popup.bufnr, active_node, signature, 0)
         end
-
       else
         vim.api.nvim_buf_set_lines(popup.bufnr, 0, 1, false, { signature.label })
       end
@@ -219,7 +229,7 @@ local check_trigger_char = function(line_to_cursor, triggers)
     if current_char == trigger_char then
       return true
     end
-    if current_char == ' ' and prev_char == trigger_char then
+    if current_char == " " and prev_char == trigger_char then
       return true
     end
   end
@@ -261,12 +271,12 @@ local open_signature = function(client, buf)
 end
 
 M.setup = function(client)
-  local group = augroup('LspSignature', { clear = false })
-  vim.api.nvim_clear_autocmds({ group = group, pattern = '<buffer>' })
+  local group = augroup("LspSignature", { clear = false })
+  vim.api.nvim_clear_autocmds({ group = group, pattern = "<buffer>" })
 
-  autocmd('TextChangedI', {
+  autocmd("TextChangedI", {
     group = group,
-    pattern = '<buffer>',
+    pattern = "<buffer>",
     callback = function(data)
       -- Guard against spamming of method not supported after
       -- stopping a language serer with LspStop

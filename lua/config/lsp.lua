@@ -1,4 +1,3 @@
-
 local lsp_config = require("lspconfig")
 require("lspkind").init()
 
@@ -13,7 +12,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = nil })
 
-local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities =
+  require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 -- leave formatting and diagnostics to null-ls
 capabilities.textDocument.formatting = false

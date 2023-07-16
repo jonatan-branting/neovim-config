@@ -47,14 +47,16 @@ local column_component = {
     for _ = 1, #tostring(vim.fn.line("$")) - #tostring(vim.fn.col(".")) do
       padding = padding .. " "
     end
-    if #padding == 0 then padding = " " end
+    if #padding == 0 then
+      padding = " "
+    end
     return padding .. vim.fn.col(".") .. " "
   end,
   hl = function(self)
     local color = self:mode_color()
     return { bg = color, fg = "bg", bold = true }
   end,
-  update = 'CursorMoved',
+  update = "CursorMoved",
 }
 
 local filename_component = {
@@ -75,11 +77,12 @@ local filename_component = {
       provider = function(self)
         return self.lfilename
       end,
-    }, {
+    },
+    {
       provider = function(self)
         return vim.fn.pathshorten(self.lfilename)
       end,
-    }
+    },
   },
 }
 
@@ -104,23 +107,30 @@ local file_flags = {
 
 local filename_separator_left = {
   provider = function()
-    if conditions.is_active() then return  "››" else return "‹‹" end
-  end
+    if conditions.is_active() then
+      return "››"
+    else
+      return "‹‹"
+    end
+  end,
 }
 
 local filename_separator_right = {
   provider = function()
-    if conditions.is_active() then return "‹‹" else return "››" end
-  end
+    if conditions.is_active() then
+      return "‹‹"
+    else
+      return "››"
+    end
+  end,
 }
 
-local filename_block =
-  {
-    filename_separator_left,
-    filename_component,
-    filename_separator_right,
-    unpack(file_flags)
-  }
+local filename_block = {
+  filename_separator_left,
+  filename_component,
+  filename_separator_right,
+  unpack(file_flags),
+}
 
 local file_type = {
   provider = function()
@@ -169,7 +179,7 @@ local lsp_component = {
   update = { "LspAttach", "LspDetach" },
 
   -- Or complicate things a bit and get the servers names
-  provider  = function(self)
+  provider = function(self)
     local names = {}
     for i, server in ipairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
       table.insert(names, server.name)
@@ -234,8 +244,10 @@ local git_component = {
 
   init = function(self)
     self.status_dict = vim.b.gitsigns_status_dict
-    self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
-    self.cwd = vim.fn.getcwd():gsub('^.*/', '')
+    self.has_changes = self.status_dict.added ~= 0
+      or self.status_dict.removed ~= 0
+      or self.status_dict.changed ~= 0
+    self.cwd = vim.fn.getcwd():gsub("^.*/", "")
   end,
 
   -- on_click = {
@@ -250,21 +262,21 @@ local git_component = {
   hl = { fg = "bg", bg = "fg", bold = true },
   {
     provider = function(self)
-
-      if not self.status_dict then return ' ' .. self.cwd end
-
+      if not self.status_dict then
+        return " " .. self.cwd
+      end
 
       local head = self.status_dict.head
 
       local max_head_len = 20
       if string.len(head) > max_head_len then
-        head = head:sub(1, max_head_len - 3) .. '...'
+        head = head:sub(1, max_head_len - 3) .. "..."
       end
 
       if head and #head > 0 then
-        return '  ' .. head .. ' '
+        return "  " .. head .. " "
       else
-        return '  untracked '
+        return "  untracked "
       end
     end,
   },
@@ -305,15 +317,17 @@ local work_dir = {
         local trail = self.cwd:sub(-1) == "/" and "" or "/"
         return self.cwd .. trail .. " "
       end,
-    }, {
+    },
+    {
       provider = function(self)
         local cwd = vim.fn.pathshorten(self.cwd)
         local trail = self.cwd:sub(-1) == "/" and "" or "/"
         return cwd .. trail .. " "
       end,
-    }, {
+    },
+    {
       provider = "",
-    }
+    },
   },
 }
 
@@ -399,7 +413,7 @@ local terminal_statusline = {
 local statuslines = {
   -- Hack to make sure that floating windows do not update the statusline
   fallthrough = false,
-  condition = function (self)
+  condition = function(self)
     if utils.is_floating(0) then
       self.winnr = self.last_winnr or self.winnr
     else
@@ -450,7 +464,7 @@ local winbar = {
   hl = function()
     local bg = ui_utils.get_highlight("WinSeparator").fg
     local fg = ui_utils.get_highlight("NormalNC").fg
-    return { bg = bg, fg = fg}
+    return { bg = bg, fg = fg }
   end,
   {
     condition = function()
@@ -468,7 +482,7 @@ local winbar = {
     filename_component,
     unpack(file_flags),
     { provider = " " },
-  }
+  },
 }
 
 require("heirline").setup({
@@ -481,7 +495,8 @@ vim.api.nvim_create_autocmd("User", {
   pattern = "HeirlineInitWinbar",
   callback = function(args)
     local buf = args.buf
-    local buftype = vim.tbl_contains({ "prompt", "nofile", "help", "quickfix" }, vim.bo[buf].buftype)
+    local buftype =
+      vim.tbl_contains({ "prompt", "nofile", "help", "quickfix" }, vim.bo[buf].buftype)
     local filetype = vim.tbl_contains({ "gitcommit", "fugitive" }, vim.bo[buf].filetype)
     if buftype or filetype then
       vim.opt_local.winbar = nil

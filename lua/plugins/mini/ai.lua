@@ -4,25 +4,23 @@ require("mini.ai").setup({
   -- Also use this to disable builtin textobjects. See |MiniAi.config|.
   custom_textobjects = {
     -- argument
-    a = gen_spec.argument({ brackets = { "%b()", "%b{}" }, separator = '[,;]' }),
-    b = { {"%b[]", "%b()", "%b{}" } },
+    a = gen_spec.argument({ brackets = { "%b()", "%b{}" }, separator = "[,;]" }),
+    b = { { "%b[]", "%b()", "%b{}" } },
     -- digits
-    d = { '%f[%d]%d+' },
+    d = { "%f[%d]%d+" },
     -- diagnostics (errors)
     f = gen_spec.treesitter({
-        a = { "@function.outer" },
-        i = { "@function.inner" },
-      }
-    ),
+      a = { "@function.outer" },
+      i = { "@function.inner" },
+    }),
     -- scope
-  s = gen_spec.treesitter({
-        a = { "@function.outer", "@class.outer" },
-        i = { "@function.inner", "@class.inner" },
-      }
-    ),
+    s = gen_spec.treesitter({
+      a = { "@function.outer", "@class.outer" },
+      i = { "@function.inner", "@class.inner" },
+    }),
     x = { {
-      '\n()%s*().-()\n()',
-      '^()%s*().-()\n()'
+      "\n()%s*().-()\n()",
+      "^()%s*().-()\n()",
     } },
     -- WORD
     -- W = { {
@@ -41,23 +39,23 @@ require("mini.ai").setup({
   -- Module mappings. Use `''` (empty string) to disable one.
   mappings = {
     -- Main textobject prefixes
-    around = 'a',
-    inside = 'i',
+    around = "a",
+    inside = "i",
     -- Next/last textobjects
-    around_next = 'an',
-    inside_next = 'in',
-    around_last = 'ap',
-    inside_last = 'ip',
+    around_next = "an",
+    inside_next = "in",
+    around_last = "ap",
+    inside_last = "ip",
     -- Move cursor to corresponding edge of `a` textobject
-    goto_left = 'g[',
-    goto_right = 'g]',
+    goto_left = "g[",
+    goto_right = "g]",
   },
   -- Number of lines within which textobject is searched
   n_lines = 300,
   -- How to search for object (first inside current line, then inside
   -- neighborhood). One of 'cover', 'cover_or_next', 'cover_or_prev',
   -- 'cover_or_nearest', 'next', 'previous', 'nearest'.
-  search_method = 'cover_or_next',
+  search_method = "cover_or_next",
 })
 
 -- for _, k in ipairs({ "]", "}", ">", "o", "f", "r", "b" }) do
@@ -69,5 +67,3 @@ require("mini.ai").setup({
 --     -- print([[<Cmd>lua MiniAi.move_cursor('left', 'a',]]  .. k .. [[, { search_method = 'next' })<CR>]])
 --   end
 -- end
-
-

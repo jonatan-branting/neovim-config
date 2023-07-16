@@ -1,4 +1,4 @@
-require("tabout").setup {
+require("tabout").setup({
   tabkey = "<Tab>",
   backwards_tabkey = "<S-Tab>",
   act_as_tab = true,
@@ -8,13 +8,13 @@ require("tabout").setup {
   enable_backwards = true,
   completion = true,
   tabouts = {
-    {open = "'", close = "'"},
-    {open = "\"", close = "\""},
-    {open = "`", close = "`"},
-    {open = "(", close = ")"},
-    {open = "[", close = "]"},
-    {open = "{", close = "}"}
+    { open = "'", close = "'" },
+    { open = '"', close = '"' },
+    { open = "`", close = "`" },
+    { open = "(", close = ")" },
+    { open = "[", close = "]" },
+    { open = "{", close = "}" },
   },
   ignore_beginning = true,
-  exclude = {}
-}
+  exclude = {},
+})

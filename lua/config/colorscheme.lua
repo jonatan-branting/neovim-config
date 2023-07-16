@@ -8,5 +8,5 @@ require("catppuccin").setup({
   term_colors = true,
 })
 
-vim.cmd [[ set bg=dark ]]
-vim.cmd [[ colorscheme catppuccin]]
+vim.cmd([[ set bg=dark ]])
+vim.cmd([[ colorscheme catppuccin]])
