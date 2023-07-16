@@ -136,7 +136,7 @@ end
 
 local setup = function()
   vim.cmd [[
-    command! -complete=command -nargs=+ PopupNext :lua require("plenary.reload").reload_module("modules.popup", true); require("plenary.reload").reload_module("modules.au", true); require("modules.popup").popup_next(<q-args>)
+    command! -complete=command -nargs=+ PopupNext :lua require("plenary.reload").reload_module("modules.popup", true); require("plenary.reload").reload_module("popup", true); require("modules.popup").popup_next(<q-args>)
   ]]
 
   vim.cmd [[

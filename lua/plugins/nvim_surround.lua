@@ -1,3 +1,5 @@
+-- TODO should fetch what keybinds to use from elsewhere
+
 require("nvim-surround").setup({
   keymaps = {
     normal = "m",

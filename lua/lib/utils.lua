@@ -1,4 +1,4 @@
-local buffers = require("buffers")
+local buffers = require("lib.buffers")
 
 local M = {}
 function M.range(a, b, step)

@@ -16,8 +16,8 @@ require('gitsigns').setup {
   attach_to_untracked = false,
   word_diff = false,
   status_formatter = nil, -- Use default
-  -- use_decoration_api = true,
-  -- use_internal_diff = true,  -- If luajit is present
+  use_decoration_api = true,
+  use_internal_diff = true,
   diff_opts = {
     internal = true
   }

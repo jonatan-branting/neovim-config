@@ -1,6 +1,6 @@
 -- Copied from folk/tokyonight
 
-local hsluv = require("modules.lib.hsluv")
+local hsluv = require("lib.hsluv")
 local utils = {}
 utils.fg = "#c0caf5"
 utils.bg = "#1f2335"

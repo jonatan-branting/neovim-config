@@ -32,7 +32,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "<leader>bf", vim.lsp.buf.format, { buffer = bufnr, silent = true })
 
   if client.server_capabilities.signatureHelpProvider then
-    require("modules._lsp.signature").setup(client)
+    require("modules.lsp_signature").setup(client)
   end
 
   require("better-n").register_keys()

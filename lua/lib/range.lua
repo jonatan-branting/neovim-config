@@ -1,4 +1,4 @@
-local Position = require("modules.lib.position")
+local Position = require("lib.position")
 local Range = {}
 
 local function get_normalized_range(pos1, pos2)

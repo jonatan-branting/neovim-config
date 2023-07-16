@@ -1,7 +1,7 @@
 -- TODO this causes crashes with ml_get!
 local conditions = require("heirline.conditions")
 local h_utils = require("heirline.utils")
-local ui_utils = require("modules.ui.utils")
+local ui_utils = require("lib.colors")
 local utils = require("utils")
 
 local function setup_colors()
@@ -57,24 +57,6 @@ local column_component = {
   update = 'CursorMoved',
 }
 
-local file_icon = {
-  init = function(self)
-  end,
-  provider = function(self)
-    local filename = self.filename
-    local extension = vim.fn.fnamemodify(filename, ":e")
-    self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(
-      filename,
-      extension,
-      { default = true }
-    )
-    return self.icon and (self.icon .. " ")
-  end,
-  hl = function(self)
-    return { fg = self.icon_color }
-  end,
-}
-
 local filename_component = {
   init = function(self)
     self.filename = vim.api.nvim_buf_get_name(0)
@@ -118,14 +100,6 @@ local file_flags = {
     end,
     -- hl = "Constant",
   },
-}
-
-local filename_modifier = {
-  hl = function()
-    if vim.bo.modified then
-      return { fg = "cyan", bold = true, force = true }
-    end
-  end,
 }
 
 local filename_separator_left = {
@@ -188,27 +162,6 @@ local file_last_modified = {
     local ftime = vim.fn.getftime(vim.api.nvim_buf_get_name(0))
     return (ftime > 0) and os.date("%c", ftime)
   end,
-}
-
-local ruler = {
-  -- %l = current line number
-  -- %L = number of lines in the buffer
-  -- %c = column number
-  -- %P = percentage through file of displayed window
-  provider = "%7(%l/%3L%):%2c %P",
-}
-
-local scollbar = {
-  static = {
-    sbar = { "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" },
-  },
-  provider = function(self)
-    local curr_line = vim.api.nvim_win_get_cursor(0)[1]
-    local lines = vim.api.nvim_buf_line_count(0)
-    local i = math.floor(curr_line / lines * (#self.sbar - 1)) + 1
-    return string.rep(self.sbar[i], 2)
-  end,
-  hl = { fg = "blue", bg = "bright_bg" },
 }
 
 local lsp_component = {
@@ -276,7 +229,6 @@ local diagnostics_component = {
   },
 }
 
--- "TODO use wrapper functions instead?"
 local git_component = {
   condition = conditions.is_git_repo,
 
@@ -316,51 +268,6 @@ local git_component = {
       end
     end,
   },
-  -- {
-  --   condition = function(self)
-  --     return self.has_changes
-  --   end,
-  --   provider = "(",
-  -- },
-  -- {
-  --   provider = function(self)
-  --     local count = self.status_dict.added or 0
-  --     return count > 0 and ("+" .. count)
-  --   end,
-  --   hl = "DiffAdd",
-  -- },
-  -- {
-  --   provider = function(self)
-  --     local count = self.status_dict.removed or 0
-  --     return count > 0 and ("-" .. count)
-  --   end,
-  --   hl = "DiffDelete",
-  -- },
-  -- {
-  --   provider = function(self)
-  --     local count = self.status_dict.changed or 0
-  --     return count > 0 and ("~" .. count)
-  --   end,
-  --   hl = "DiffChange",
-  -- },
-  -- {
-  --   condition = function(self)
-  --     return self.has_changes
-  --   end,
-  --   provider = ")",
-  -- },
-}
-
-local snippets = {
-  condition = function()
-    return vim.tbl_contains({ "s", "i" }, vim.fn.mode())
-  end,
-  provider = function()
-    local forward = (vim.fn["UltiSnips#CanJumpForwards"]() == 1) and "" or ""
-    local backward = (vim.fn["UltiSnips#CanJumpBackwards"]() == 1) and " " or ""
-    return backward .. forward
-  end,
-  hl = { fg = "red", bold = true },
 }
 
 local dap_component = {
@@ -368,51 +275,15 @@ local dap_component = {
     return require("dap").session() ~= nil
   end,
   provider = function()
+    --       ﰇ  
     return " " .. require("dap").status()
   end,
   hl = "Debug",
-  --       ﰇ  
 }
-
--- local UltTest = {
---     condition = function()
---         return vim.api.nvim_call_function("ultest#is_test_file", {}) ~= 0
---     end,
---     static = {
---         passed_icon = vim.fn.sign_getdefined("test_pass")[1].text,
---         failed_icon = vim.fn.sign_getdefined("test_fail")[1].text,
---         failed_hl = { fg = utils.get_highlight("UltestFail").fg },
---         passed_hl = { fg = utils.get_highlight("UltestPass").fg },
---     },
---     init = function(self)
---         self.status = vim.api.nvim_call_function("ultest#status", {})
---     end,
---     {
---         provider = function(self)
---             return self.passed_icon .. self.status.passed .. " "
---         end,
---         hl = function(self)
---             return self.passed_hl
---         end,
---     },
---     {
---         provider = function(self)
---             return self.failed_icon .. self.status.failed .. " "
---         end,
---         hl = function(self)
---             return self.failed_hl
---         end,
---     },
---     {
---         provider = function(self)
---             return "of " .. self.status.tests - 1
---         end,
---     },
--- }
 
 local work_dir = {
   provider = function(self)
-    -- self.icon = (vim.fn.haslocaldir(0) == 1 and "l" or "g") .. " " .. " "
+    self.icon = (vim.fn.haslocaldir(0) == 1 and "l" or "g") .. " " .. " "
     local cwd = vim.fn.getcwd(0)
     self.cwd = vim.fn.fnamemodify(cwd, ":~")
     if not conditions.width_percent_below(#self.cwd, 0.27) then
@@ -457,75 +328,21 @@ local help_filename = {
   hl = "Directory",
 }
 
-local terminal_name = {
-  -- icon = ' ', -- 
-  {
-    provider = function()
-      local tname, _ = vim.api.nvim_buf_get_name(0):gsub(".*:", "")
-      return " " .. tname
-    end,
-    hl = { fg = "blue", bold = true },
-  },
-  { provider = " - " },
-  {
-    provider = function()
-      return vim.b.term_title
-    end,
-  },
-  {
-    provider = function()
-      -- local id = require("terminal"):current_term_index()
-      -- return " " .. (id or "Exited")
-    end,
-    hl = { bold = true, fg = "blue" },
-  },
-}
-
-local spell = {
-  condition = function()
-    return vim.wo.spell
-  end,
-  provider = "SPELL ",
-  hl = { bold = true, fg = "orange" },
-}
-
--- column_component = h_utils.surround({ "", "" }, "bright_bg", { column_component })
-
 local aligner = { provider = "%=" }
 local spacer = { provider = " " }
 
 local default_statusline = {
-  -- column_component,
   column_component,
   spacer,
-  -- spell,
-  -- file_type,
   lsp_component,
   spacer,
   diagnostics_component,
-  -- TODO DAP status
-  -- TODO Neotest status
-  -- TODO split into multiple files? this is a bit unwieldy
-  -- filename_block,
-  -- { provider = "%<" },
-  -- spacer,
-  -- git,
-  -- spacer,
   aligner,
   dap_component,
-  --neotest messages
   aligner,
   spacer,
-  -- UltTest,
-  -- spacer,
-  -- file_type,
-  -- utils.make_flexible_component(3, { spacer, file_encoding }, { provider = "" }),
-  -- spacer,
-  -- ruler,
   work_dir,
   git_component,
-  -- spacer,
-  -- scollbar,
 }
 
 local inactive_statusline = {
@@ -573,11 +390,9 @@ local terminal_statusline = {
   condition = function()
     return conditions.buffer_matches({ buftype = { "terminal" } })
   end,
-  -- hl = { bg = "dark_red" },
   { condition = conditions.is_active, column_component, spacer },
   file_type,
   spacer,
-  -- terminal_name,
   aligner,
 }
 
@@ -593,10 +408,6 @@ local statuslines = {
 
     return true
   end,
-  -- update = function(self)
-  --   -- return false
-  --   return not utils.is_floating(0)
-  -- end,
   hl = function()
     if conditions.is_active() then
       return { fg = "bright_fg", bg = "bright_bg" }
@@ -635,31 +446,8 @@ local statuslines = {
   default_statusline,
 }
 
-local close_button = {
-  condition = function(self)
-    return not vim.bo.modified
-  end,
-  -- update = 'BufEnter',
-  update = { "WinNew", "WinClosed", "BufEnter" },
-  { provider = " " },
-  {
-    provider = "",
-    hl = { fg = "gray" },
-    -- on_click = {
-    --   callback = function(_, winid)
-    --     vim.api.nvim_win_close(winid, true)
-    --   end,
-    --   name = function(self)
-    --     return "heirline_close_button_" .. self.winnr
-    --   end,
-    --   update = true,
-    -- },
-  },
-}
-
 local winbar = {
   hl = function()
-    -- return "WinSeparator"
     local bg = ui_utils.get_highlight("WinSeparator").fg
     local fg = ui_utils.get_highlight("NormalNC").fg
     return { bg = bg, fg = fg}
@@ -676,15 +464,10 @@ local winbar = {
     end,
   },
   {
-    -- file_icon,
     { provider = " " },
-    -- { provider = " ›" },
     filename_component,
     unpack(file_flags),
     { provider = " " },
-    -- aligner,
-    -- aligner,
-    -- spacer
   }
 }
 

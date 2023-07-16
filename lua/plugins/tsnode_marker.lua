@@ -1,3 +1,5 @@
+-- TODO should this be under autocommand instead?
+
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("tsnode-marker-markdown", {}),
   pattern = "markdown",

@@ -1,4 +1,4 @@
-local Enumeratable = require("enumeratable")
+local Enumeratable = require("lib.enumeratable")
 
 local Window = {}
 
@@ -30,7 +30,7 @@ function Window:new(winnr)
 end
 
 function Window:buffer()
-  local Buffer = require("buffer")
+  local Buffer = require("lib.buffer")
 
   return Buffer:new(vim.api.nvim_win_get_buf(self.winnr))
 end

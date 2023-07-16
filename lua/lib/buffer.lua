@@ -1,4 +1,4 @@
-local Enumeratable = require("enumeratable")
+local Enumeratable = require("lib.enumeratable")
 
 local Buffer = {}
 

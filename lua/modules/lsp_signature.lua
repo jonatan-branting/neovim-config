@@ -1,14 +1,13 @@
 local M = {}
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
-local util = require('vim.lsp.util')
+local util = require("vim.lsp.util")
 local ts_utils = require("nvim-treesitter.ts_utils")
-local utils = require("utils")
 
 Popup = require("nui.popup")
 
 local function ts_parser_exists(buf)
-  success, _ = pcall(function()
+  local success, _ = pcall(function()
     vim.treesitter.get_parser(buf)
   end)
 
