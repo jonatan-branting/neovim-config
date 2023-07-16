@@ -85,12 +85,9 @@ require("lazy").setup({
     "ckolkey/ts-node-action",
     dependencies = { "nvim-treesitter" },
     init = function()
-      vim.keymap.set(
-        { "n" },
-        "<leader>na",
-        require("ts-node-action").node_action,
-        { desc = "Trigger Node Action" }
-      )
+      vim.keymap.set("n", "<leader>na", require("ts-node-action").node_action, {
+        desc = "Trigger Node Action",
+      })
     end,
     config = true,
   },
@@ -162,7 +159,10 @@ require("lazy").setup({
     "jonatan-branting/other.nvim",
     dev = true,
     init = function()
-      vim.keymap.set("n", "<leader>r", "<cmd>:Other<CR>", { silent = true })
+      vim.keymap.set("n", "<leader>r", "<cmd>:Other<CR>", {
+        silent = true,
+        desc = "Open Other",
+      })
     end,
     config = true,
   },
@@ -171,7 +171,10 @@ require("lazy").setup({
     init = function()
       vim.keymap.set("n", "<leader>o", function()
         return "<cmd>Fern . -reveal=%<cr>"
-      end, { expr = true })
+      end, {
+        expr = true,
+        desc = "Open File Explorer",
+      })
     end,
     config = true,
   },
