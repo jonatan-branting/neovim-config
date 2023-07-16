@@ -81,6 +81,9 @@ lsp_config.lua_ls.setup({
   on_attach = on_attach,
   settings = {
     Lua = {
+      format = {
+        enable = false,
+      },
       completion = {
         callSnippet = "Disable",
       },
