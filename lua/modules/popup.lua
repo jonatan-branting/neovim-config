@@ -1,6 +1,6 @@
 local Popup = require("nui.popup")
 local event = require("nui.utils.autocmd").event
-local utils = require("utils")
+local utils = require("lib.utils")
 
 local delete_commands = function(...)
   local groups = { ... }

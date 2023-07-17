@@ -33,7 +33,8 @@ function Enumeratable:map(func)
   local mapped = {}
 
   for _, item in ipairs(self.items) do
-    table.insert(mapped, func(item))
+    local result, _ = func(item)
+    table.insert(mapped, result)
   end
 
   return Enumeratable:new(mapped)
@@ -53,6 +54,18 @@ end
 
 function Enumeratable:select(func)
   return self:filter(func)
+end
+
+function Enumeratable:reject(func)
+  local filtered = {}
+
+  for _, item in ipairs(self.items) do
+    if not func(item) then
+      table.insert(filtered, item)
+    end
+  end
+
+  return Enumeratable:new(filtered)
 end
 
 function Enumeratable:reduce(func, initial)

@@ -1,6 +1,6 @@
 local Popup = require("nui.popup")
-local Window = require("window")
-local Enumeratable = require("enumeratable")
+local Window = require("lib.window")
+local Enumeratable = require("lib.enumeratable")
 
 local event = require("nui.utils.autocmd").event
 -- TODO support for debugger! i.e. make different providers

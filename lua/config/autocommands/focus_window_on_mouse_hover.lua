@@ -1,5 +1,4 @@
-local Window = require("window")
-local utils = require("utils")
+local Window = require("lib.window")
 
 local group = vim.api.nvim_create_augroup("FocusWindowOnHover", {})
 vim.api.nvim_create_autocmd("User", {

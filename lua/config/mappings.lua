@@ -1,5 +1,5 @@
-local utils = require("utils")
-local Enumeratable = require("enumeratable")
+local utils = require("lib.utils")
+local Enumeratable = require("lib.enumeratable")
 local keymap = vim.keymap
 
 local function nnoremap(opts, desc)
@@ -297,7 +297,7 @@ nnoremap({ "_", "<nop>" })
 -- Begone
 nnoremap({ "Q", "<nop>" })
 
-local todo = require("modules._todo")
+local todo = require("modules.todo")
 
 -- TODO come up with good context prefix <leader>z is too short
 -- nnoremap({ "<leader>z", todo.open_branch_todo }, "open-branch-todo")
@@ -451,6 +451,23 @@ vim.keymap.set("n", "i", function()
 end, {
   expr = true,
 })
+
+vim.keymap.set("n", "<leader>l", function()
+  require("modules.term"):get_terminal():toggle()
+end)
+vim.keymap.set({ "n", "x" }, "<leader>x", function()
+  -- TODO we can likely expand this to language specific mappings, which might wrap things
+  -- to auto-monkey-patch stuff in Ruby, for example, by using Treesitter
+
+  require("modules.term")
+  :get_terminal()
+  :send(vim.fn.getline("."))
+end)
+vim.keymap.set("n", "<leader>l", function()
+  require("modules.term")
+  :get_terminal()
+  :toggle()
+end)
 
 -- vim.keymap.set('n', 'o', function()
 --   local line = vim.api.nvim_get_current_line()

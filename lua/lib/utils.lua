@@ -1,5 +1,3 @@
-local buffers = require("lib.buffers")
-
 local M = {}
 function M.range(a, b, step)
   if not b then
@@ -166,32 +164,6 @@ function M.merge(a, b)
     a[k] = v
   end
   return a
-end
-
--- copied from nvim-surround
-M.get_selection = function(is_visual)
-  -- Determine whether to use visual marks or operator marks
-  local mark1, mark2
-  if is_visual then
-    mark1, mark2 = "<", ">"
-  else
-    mark1, mark2 = "[", "]"
-    buffers.adjust_mark("[")
-    buffers.adjust_mark("]")
-  end
-
-  -- Get the row and column of the first and last characters of the selection
-  local first_position = buffers.get_mark(mark1)
-  local last_position = buffers.get_mark(mark2)
-  if not first_position or not last_position then
-    return nil
-  end
-
-  local selection = {
-    first_pos = first_position,
-    last_pos = last_position,
-  }
-  return selection
 end
 
 function M.total_columns()

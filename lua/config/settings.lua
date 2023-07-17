@@ -1,4 +1,3 @@
-local utils = require("utils")
 local opt = vim.opt
 
 vim.g.mapleader = " "
