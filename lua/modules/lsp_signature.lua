@@ -86,7 +86,6 @@ local ts_in_signature = function(buf, context)
     return false
   end
 
-  -- print(position.character, position.line, requested_node:type(), cursor_node:type())
   if requested_node == cursor_node then
     return true
   end
@@ -98,34 +97,10 @@ local ts_in_signature = function(buf, context)
   return false
 end
 
-local ts_get_active_signature = function()
-  local current_node = ts_utils.get_node_at_cursor()
-  local all_nodes = get_all_sibling_nodes(current_node)
-
-  for i, node in ipairs(all_nodes) do
-    if node == current_node then
-      return i
-    end
-  end
-
-  return 1
-end
-
--- local get_active_signature = function(label)
---   local current_node = ts_utils.get_node_at_cursor()
---   local start_row, start_col, end_row, end_col = unpack(current_node:range())
--- end
-
 local function highlight_signature(buf, active_node, signature, offset)
-  -- local parser = vim.treesitter.get_string_parser(text, vim.bo.filetype)
-  -- local tree = parser:parse()
   local ns = vim.api.nvim_create_namespace("")
   local start, end_ = unpack(signature.parameters[active_node].label)
-  -- local start, end = unpack(signature.parameters.label)
-  -- print(start, end_, vim.inspect())
   vim.api.nvim_buf_add_highlight(buf, ns, "Visual", 0, start - offset, end_ - offset)
-  -- vim.api.nvim_buf_set_extmark(buf, ns, 0, start , { hl_group = "Visual" })
-  -- print(vim.inspect(tree:root()))
 end
 
 local function create_popup(ctx)
@@ -213,8 +188,6 @@ local get_signature_handler_for_client = function(client, buf)
 
       popup:mount()
     end)
-
-    -- if err then print(vim.inspect(err)) end
   end
 end
 
@@ -251,9 +224,9 @@ local open_signature = function(client, buf)
   local triggers = get_trigger_characters(client)
 
   -- csharp has wrong trigger chars for some odd reason
-  -- if client.name == 'csharp' then
-  --   triggers = { '(', ',' }
-  -- end
+  if client.name == "csharp" then
+    triggers = { "(", "," }
+  end
 
   local pos = vim.api.nvim_win_get_cursor(0)
   local line = vim.api.nvim_get_current_line()
