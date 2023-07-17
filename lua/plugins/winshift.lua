@@ -51,5 +51,5 @@ return {
         })
       end,
     })
-  end
+  end,
 }

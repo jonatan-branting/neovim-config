@@ -14,5 +14,5 @@ return {
         "erb",
       },
     })
-  end
+  end,
 }

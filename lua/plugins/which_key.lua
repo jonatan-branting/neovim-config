@@ -5,7 +5,7 @@ return {
     vim.o.timeout = true
     vim.o.timeoutlen = 300
   end,
-  config = function ()
+  config = function()
     require("which-key").setup({
       plugins = {
         marks = true, -- shows a list of your marks on ' and `
@@ -94,5 +94,5 @@ return {
         filetypes = {},
       },
     })
-  end
+  end,
 }

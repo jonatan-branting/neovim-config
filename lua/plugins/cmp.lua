@@ -15,5 +15,5 @@ return {
     { "ray-x/cmp-treesitter" },
     { "saadparwaiz1/cmp_luasnip" },
     { "L3MON4D3/LuaSnip" },
-  }
+  },
 }

@@ -22,5 +22,5 @@ return {
       ignore_beginning = true,
       exclude = {},
     })
-  end
+  end,
 }

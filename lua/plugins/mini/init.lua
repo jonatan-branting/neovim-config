@@ -6,5 +6,5 @@ return {
     require("plugins.mini.indentscope")
     require("plugins.mini.misc")
     require("plugins.mini.session")
-  end
+  end,
 }

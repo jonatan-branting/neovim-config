@@ -23,5 +23,5 @@ return {
         internal = true,
       },
     })
-  end
+  end,
 }

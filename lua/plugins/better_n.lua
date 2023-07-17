@@ -59,6 +59,5 @@ return {
         ["<leader>up"] = { previous = "<leader>up", next = "<leader>un" },
       },
     })
-  end
+  end,
 }
-

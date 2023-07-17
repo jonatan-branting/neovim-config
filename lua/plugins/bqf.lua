@@ -7,5 +7,5 @@ return {
     require("bqf").setup({
       auto_enable = true,
     })
-  end
+  end,
 }

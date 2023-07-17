@@ -4,5 +4,5 @@ return {
     local term_integrations = require("modules.term.integrations")
 
     term_integrations.set_vim_test_strategy()
-  end
+  end,
 }

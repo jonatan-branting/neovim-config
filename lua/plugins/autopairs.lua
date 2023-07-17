@@ -1,5 +1,4 @@
-return
-{
+return {
   "windwp/nvim-autopairs",
   config = function()
     local npairs = require("nvim-autopairs")
@@ -35,33 +34,33 @@ return
     for _, bracket in pairs(brackets) do
       npairs.add_rules({
         Rule(bracket[1] .. " ", " " .. bracket[2])
-        :with_pair(function()
-          return false
-        end)
-        :with_move(function(opts)
-          return opts.prev_char:match(".%" .. bracket[2]) ~= nil
-        end)
-        :use_key(bracket[2]),
+          :with_pair(function()
+            return false
+          end)
+          :with_move(function(opts)
+            return opts.prev_char:match(".%" .. bracket[2]) ~= nil
+          end)
+          :use_key(bracket[2]),
       })
     end
 
     for _, punct in pairs({ ",", ";" }) do
       require("nvim-autopairs").add_rules({
         require("nvim-autopairs.rule")("", punct)
-        :with_move(function(opts)
-          return opts.char == punct
-        end)
-        :with_pair(function()
-          return false
-        end)
-        :with_del(function()
-          return false
-        end)
-        :with_cr(function()
-          return false
-        end)
-        :use_key(punct),
+          :with_move(function(opts)
+            return opts.char == punct
+          end)
+          :with_pair(function()
+            return false
+          end)
+          :with_del(function()
+            return false
+          end)
+          :with_cr(function()
+            return false
+          end)
+          :use_key(punct),
       })
     end
-  end
+  end,
 }

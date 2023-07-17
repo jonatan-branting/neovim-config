@@ -12,5 +12,5 @@ return {
         null_ls.builtins.diagnostics.rubocop,
       },
     })
-  end
+  end,
 }

@@ -1,2 +1,1 @@
 return { "rebelot/heirline.nvim" }
-

@@ -459,14 +459,10 @@ vim.keymap.set({ "n", "x" }, "<leader>x", function()
   -- TODO we can likely expand this to language specific mappings, which might wrap things
   -- to auto-monkey-patch stuff in Ruby, for example, by using Treesitter
 
-  require("modules.term")
-  :get_terminal()
-  :send(vim.fn.getline("."))
+  require("modules.term"):get_terminal():send(vim.fn.getline("."))
 end)
 vim.keymap.set("n", "<leader>l", function()
-  require("modules.term")
-  :get_terminal()
-  :toggle()
+  require("modules.term"):get_terminal():toggle()
 end)
 
 -- vim.keymap.set('n', 'o', function()

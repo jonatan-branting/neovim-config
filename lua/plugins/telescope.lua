@@ -100,6 +100,5 @@ return {
     require("telescope").load_extension("advanced_git_search")
     require("telescope").load_extension("git_worktree")
     require("telescope-all-recent").setup({})
-  end
+  end,
 }
-

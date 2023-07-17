@@ -1,6 +1,6 @@
 return {
   "folke/neodev.nvim",
-  config = function ()
+  config = function()
     require("neodev").setup({
       library = {
         enabled = true,
@@ -15,5 +15,5 @@ return {
         pathStrict = true,
       },
     })
-  end
+  end,
 }

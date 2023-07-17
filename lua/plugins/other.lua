@@ -50,5 +50,5 @@ return {
       },
       rememberBuffers = false,
     })
-  end
+  end,
 }

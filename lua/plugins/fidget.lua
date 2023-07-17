@@ -11,5 +11,5 @@ return {
         stack_upwards = false,
       },
     })
-  end
+  end,
 }

@@ -12,5 +12,5 @@ return {
 
       require("git-worktree").create_worktree(branch_name, "develop", "origin")
     end, { nargs = 1 })
-  end
+  end,
 }
