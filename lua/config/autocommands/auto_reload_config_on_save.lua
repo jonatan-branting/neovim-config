@@ -1,7 +1,7 @@
 local reload = require("plenary.reload")
 
 vim.api.nvim_create_autocmd("BufWritePost", {
-  pattern = vim.fn.expand("~/git/dotfiles/config/nvim/") .. "**/*.lua",
+  pattern = vim.fn.expand("~/git/nvim-config/") .. "**/*.lua",
   group = group,
   callback = function(args)
     if vim.endswith(args.file, "_spec.lua") then
