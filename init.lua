@@ -1,3 +1,8 @@
+Key = require("lib.key")
+Window = require("lib.window")
+Buffer = require("lib.buffer")
+Enumeratable = require("lib.enumeratable")
+
 vim.opt.shell = "sh"
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
