@@ -1,5 +1,6 @@
 local utils = require("lib.utils")
 local Enumeratable = require("lib.enumeratable")
+local Key = require("lib.key")
 local keymap = vim.keymap
 
 local function nnoremap(opts, desc)
@@ -23,220 +24,81 @@ local function vnoremap(opts, desc)
 end
 
 -- Convenience <leader> mappings
-nnoremap({ "<leader>s", ":w<cr>" }, "save-file")
+Key.n.silent
+  :group("Windows", "<leader>w")
+  :set("Right window", "l", "<c-w>l")
+  :set("Left window", "h", "<c-w>h")
 
 -- General opinionated behaviour changes
-inoremap({ "jj", "<esc>" }, "escape")
-snoremap({ "jj", "<esc>" })
-cnoremap({ "jj", "<esc>" }, "escape")
+Key.i.s.c:set("Escape", "jj", "<esc>")
 
-vim.keymap.set("n", "k", function()
+Key.n:set("Save file", "<leader>s", "<cmd>w<cr>")
+
+Key.n.expr:set("Up", "k", function()
   if vim.v.count == 0 then
     return "gk"
   end
 
   return "m'" .. vim.v.count .. "k"
-end, { expr = true })
-vim.keymap.set("n", "j", function()
+end)
+
+Key.n.expr:set("Down", "j", function()
   if vim.v.count == 0 then
     return "gj"
   end
 
   return "m'" .. vim.v.count .. "j"
-end, { expr = true })
+end)
 
-vim.keymap.set("v", "k", "(v:count == 0 ? 'gk' : 'k')", { silent = true, expr = true })
-vim.keymap.set("v", "j", "(v:count == 0 ? 'gj' : 'j')", { silent = true, expr = true })
+-- TODO Recreate each mapping below the cursor in the Key.<mode> style
 
-vim.keymap.set({ "n", "x" }, "L", "$")
--- vnoremap({ 'L',
---   function()
---     if vim.wo.wrap then
---       return vim.cmd [[normal g$]]
---     end
+Key.x.silent.expr:set("Go up", "k", "(v:count == 0 ? 'gk' : 'k')")
+Key.x.silent.expr:set("Go down", "j", "(v:count == 0 ? 'gj' : 'j')")
 
---     local total_width = vim.fn.virtcol("$") - 1
---     local cursor_line_pos = vim.fn.virtcol(".")
---     local cursor_window_pos = vim.fn.wincol()
---     local window_width = vim.fn.winwidth(0)
-
---     if total_width == cursor_line_pos then
---       return vim.cmd [[normal 0g$]]
---     elseif cursor_window_pos == window_width then
---       return vim.cmd [[normal $h]]
---     else
---       return vim.cmd [[normal g$h]]
---     end
---   end
--- }, '')
-
--- nnoremap({ 'L',
---   function()
---     if vim.wo.wrap then
---       return vim.cmd [[normal g$]]
---     end
-
---     local total_width = vim.fn.virtcol("$") - 1
---     local cursor_line_pos = vim.fn.virtcol(".")
---     local cursor_window_pos = vim.fn.wincol()
---     local window_width = vim.fn.winwidth(0)
-
---     if total_width == cursor_line_pos then
---       return vim.cmd [[normal 0g$]]
---     elseif cursor_window_pos == window_width then
---       return vim.cmd [[normal $]]
---     else
---       return vim.cmd [[normal g$]]
---     end
---   end
--- }, '')
-
-vim.api.nvim_set_keymap(
-  "n",
+Key.n.x:set("Go to end of line", "L", "g_")
+Key.n.x.silent.expr:set(
+  "Go to start of line",
   "H",
-  "getline('.')[0 : col('.') - 2] =~# '^\\s\\+$' ? '0' : '^'",
-  { silent = true, noremap = true, expr = true }
-)
-vim.api.nvim_set_keymap(
-  "v",
-  "H",
-  "getline('.')[0 : col('.') - 2] =~# '^\\s\\+$' ? '0' : '^'",
-  { silent = true, noremap = true, expr = true }
+  "(getline('.')[0 : col('.') - 2] =~# '^\\s\\+$' ? '0' : '^')"
 )
 
-vim.api.nvim_set_keymap("v", "<", "<gv", { silent = true, noremap = true, nowait = true })
-vim.api.nvim_set_keymap("v", ">", ">gv", { silent = true, noremap = true, nowait = true })
+Key.x.nowait:set("Deindent", "<", "<gv")
+Key.x.nowait:set("Indent", ">", ">gv")
 
 -- Allow terminal style navigation in insert mode
-inoremap({ "<c-a>", "<c-o>g0" }, "start-of-line")
+Key.i:set("Start of line", "<c-a>", "<c-o>g0")
+Key.i:set("End of line", "<c-e>", "<c-o>g$")
 
--- Search and replace selection
-vnoremap({ "<c-r>", '"hy:%s/<c-r>h//gc<left><left><left>' }, "search-and-replace")
-
--- Delete current line
+Key.n:set("Search and replace", "<leader>r", ":%s///gc<left><left><left>")
 
 -- Consistency please!
-nnoremap({ "vv", "0v$" })
-nnoremap({ "Y", "y$" })
-
--- Run last macro using ,
-nnoremap({ ",", "@@" }, "rerun-macro")
+Key.n:set("Select line", "vv", "0v$")
+Key.n:set("Yank to end of line", "Y", "y$")
 
 -- Windows
-nnoremap({ "<leader>ww", "<c-w>w" }, "?")
-nnoremap({ "<leader>wd", "<c-w>c" }, "delete-window")
-nnoremap({ "-", "<c-w>-" })
-nnoremap({ "+", "<c-w>+" })
+Key.n.silent
+  :group("Windows", "<leader>w")
+  :set("Close window", "d", "<c-w>c")
+  :set("Horizontal split", "-", "<c-w>s")
+  :set("Vertical split", "/", "<c-w>v")
+  :set("Zoom window", "<space>", "<c-w>m")
+  :set("Enlargen window left", "H", "<c-w>5<")
+  :set("Enlargen window right", "L", "<c-w>5>")
+  :set("Semi-rotate layout", "y", "<c-w>H")
+  :set("Balance windows", "=", "<c-w>=")
 
-nnoremap({ "yc", "<c-w>c" }, "delete-window")
+Key.v:set("Visual star", "*", function()
+  local search = require("utils").get_visual_selection()
 
-nnoremap({ "<leader>w-", "<c-w>s" }, "horizontal-split")
-nnoremap({ "<leader>w/", "<c-w>v" }, "vertical-split")
-nnoremap({ "<leader>w<space>", "<c-w>m" }, "zoom-window")
-nnoremap({ "<leader>wH", "<c-w>5<" }, "enlargen-window-left")
-nnoremap({ "<leader>wL", "<c-w>5>" }, "enlargen-window-right")
-nnoremap({ "<leader>wy", "<c-w>H" }, "semi-rotate-layout")
-nnoremap({ "<leader>w=", "<c-w>=" }, "balance-windows")
-nnoremap({ "y=", "<c-w>=" }, "balance-windows")
-nnoremap({ "yu", "<cmd>WindowsMaximize<cr>" }, "maximize-window")
-
-vnoremap({
-  "*",
-  function()
-    local search = require("utils").get_visual_selection()
-
-    vim.api.nvim_input([[<esc>]])
-    vim.api.nvim_input("/" .. search .. "<cr>")
-  end,
-}, "visual-star")
-
--- GitSigns
-local gitsigns = require("gitsigns")
-nnoremap({
-  "<leader>hs",
-  function()
-    gitsigns.stage_hunk()
-  end,
-}, "stage-hunk")
-nnoremap({
-  "<leader>hu",
-  function()
-    gitsigns.undo_stage_hunk()
-  end,
-}, "undo-hunk")
-nnoremap({
-  "<leader>hr",
-  function()
-    gitsigns.reset_hunk()
-  end,
-}, "reset-hunk")
-nnoremap({
-  "<leader>hR",
-  function()
-    gitsigns.reset_buffer()
-  end,
-}, "reset-buffer")
-nnoremap({
-  "<leader>hb",
-  function()
-    gitsigns.blame_line()
-  end,
-}, "blame-line")
-
-nnoremap({
-  "]h",
-  function()
-    if vim.wo.diff then
-      vim.api.nvim_exec("normal ]c", false)
-    else
-      gitsigns.next_hunk()
-    end
-  end,
-}, "next-hunk")
-
-nnoremap({
-  "<leader>hn",
-  function()
-    if vim.wo.diff then
-      vim.api.nvim_exec("normal ]c", false)
-    else
-      gitsigns.next_hunk()
-    end
-  end,
-}, "next-hunk")
-
-nnoremap({
-  "[h",
-  function()
-    if vim.wo.diff then
-      vim.api.nvim_exec("normal [c", false)
-    else
-      gitsigns.prev_hunk()
-    end
-  end,
-}, "prev-hunk")
-
-nnoremap({
-  "<leader>hp",
-  function()
-    if vim.wo.diff then
-      vim.api.nvim_exec("normal [c", false)
-    else
-      gitsigns.prev_hunk()
-    end
-  end,
-}, "prev-hunk")
+  vim.api.nvim_input([[<esc>]])
+  vim.api.nvim_input("/" .. search .. "<cr>")
+end)
 
 vim.keymap.set("n", "<leader>gs", "<cmd>Git add %<cr>", { desc = "Git add current file" })
 vim.keymap.set("n", "<leader>gc", "<cmd>Neogit commit<cr>", { desc = "Git add current file" })
 vim.keymap.set("n", "<leader>gg", "<cmd>Neogit kind=replace<cr>", { desc = "Git add current file" })
-vim.keymap.set(
-  "n",
-  "<leader>gl",
-  "<cmd>PopupNext Git log --name-only<cr>",
-  { desc = "Git add current file" }
-)
-vim.keymap.set("n", "<leader>gr", function()
+
+Key.n:set("Reset current file", "<leader>gr", function()
   local default_branch_path = vim.fn.system("git symbolic-ref refs/remotes/origin/HEAD")
   local default_branch = Enumeratable:new(vim.split(default_branch_path, "/"))
     :map(function(item)
@@ -244,46 +106,32 @@ vim.keymap.set("n", "<leader>gr", function()
     end)
     :last()
 
-  -- TODO make this more userfriendly somehow...
   -- Add current position to jumplist
   vim.cmd("normal m'")
 
   vim.cmd("Git checkout " .. default_branch .. " -- %")
 
   print("Checked out " .. vim.fn.expand("%") .. " from " .. default_branch)
-end, { desc = "Git add current file" })
+end)
 
 -- Easy Align
 vnoremap({ "<cr>", "<Plug>(EasyAlign)" }, "easy-align-selected")
 nnoremap({ "ga", "<Plug>(EasyAlign)" }, "easy-align")
 
--- Emmet
-inoremap({ ",,", "<c-y>," })
-
--- Related files quick jumping
--- nnoremap({ '<leader>rc', ':Econtroller<cr>'}, 'goto-controller')
--- nnoremap({ '<leader>rm', ':Emodel<cr>'}, 'goto-model')
--- nnoremap({ '<leader>rv', ':Eview<cr>'}, 'goto-view')
--- nnoremap({ '<leader>ra', ':A<cr>'}, 'alternate-file')
--- nnoremap({ '<leader>rr', ':R<cr>'}, 'related-file')
-
--- Test
-nnoremap({ "<leader>tn", ":TestNearest<cr>" }, "test-nearest")
-nnoremap({ "<leader>tf", ":TestFile<cr>" }, "test-file")
-nnoremap({ "<leader>tl", ":TestLast<cr>" }, "test-last")
-nnoremap({ "<leader>tv", ":TestVisit<cr>" }, "test-visit")
-
-nnoremap({ "gp", "p" })
-
 -- Asterisk
-nnoremap({ "*", "<Plug>(asterisk-*)" })
-nnoremap({ "#", "<Plug>(asterisk-#)" })
-nnoremap({ "g*", "<Plug>(asterisk-g*)" })
-nnoremap({ "g#", "<Plug>(asterisk-g#)" })
-nnoremap({ "z*", "<Plug>(asterisk-z*)" })
-nnoremap({ "gz*", "<Plug>(asterisk-gz*)" })
-nnoremap({ "z#", "<Plug>(asterisk-z#)" })
-nnoremap({ "gz#", "<Plug>(asterisk-gz#)" })
+Key.n
+  :set("Search word under cursor", "*", "<Plug>(asterisk-*)")
+  :set("Search word under cursor backwards", "#", "<Plug>(asterisk-#)")
+  :set("Search word under cursor, but don't jump", "g*", "<Plug>(asterisk-g*)")
+  :set("Search word under cursor backwards, but don't jump", "g#", "<Plug>(asterisk-g#)")
+  :set("Search word under cursor, but don't move cursor", "z*", "<Plug>(asterisk-z*)")
+  :set("Search word under cursor, but don't move cursor, backwards", "gz*", "<Plug>(asterisk-gz*)")
+  :set("Search word under cursor backwards, but don't move cursor", "z#", "<Plug>(asterisk-z#)")
+  :set(
+    "Search word under cursor backwards, but don't move cursor, backwards",
+    "gz#",
+    "<Plug>(asterisk-gz#)"
+  )
 
 -- Allow line split using S, as opposed to J(oin)
 -- vim.keymap.set("n", 'S', 'i<cr><Esc>^mwgk:silent! s/\v +$//<cr>:noh<cr>')
