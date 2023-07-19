@@ -1,11 +1,18 @@
-vim.g.tokyonight_sidebars = { "qf", "vista_kind", "terminal", "packer", "fern" }
-vim.g.tokyonight_style = "night"
-vim.g.tokyonight_hide_inactive_statusline = true
-vim.g.tokyonight_dark_float = false
-vim.g.catppuccin_flavour = "mocha"
-
 require("catppuccin").setup({
+  flavour = "mocha",
   term_colors = true,
+  styles = {
+    comments = { "italic" },
+  },
+  integrations = {
+    cmp = true,
+    gitsigns = true,
+    treesitter = true,
+    notify = true,
+    mini = true,
+  },
+  custom_highlights = {},
+  color_overrides = {},
 })
 
 vim.cmd([[ set bg=dark ]])
