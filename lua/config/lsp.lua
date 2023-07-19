@@ -26,7 +26,6 @@ capabilities.textDocument.foldingRange = {
 local on_attach = function(client, bufnr)
   vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
-  vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, silent = true })
   vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { buffer = bufnr, silent = true })
   vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { buffer = bufnr, silent = true })
   vim.keymap.set("n", "<leader>bf", vim.lsp.buf.format, { buffer = bufnr, silent = true })
@@ -47,7 +46,6 @@ local servers = {
 
 require("mason-lspconfig").setup({
   ensure_installed = servers,
-  -- automatic_installation = true,
 })
 
 for _, server in ipairs(servers) do
