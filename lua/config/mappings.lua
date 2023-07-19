@@ -228,7 +228,6 @@ Key.n:set("Join lines removing whitespace", "J", function()
     vim.cmd("undojoin | normal! hx")
   end
 
-  vim.cmd("normal! m'") -- Populate jumplist
   vim.cmd("normal! `z")
 end)
 
@@ -241,6 +240,7 @@ Key.n.expr
     end
   end)
   :set("Indent aware insert", "i", function()
+    vim.cmd("normal! m'") -- Populate jumplist
     if #vim.fn.getline(".") == 0 then
       return [["_ci]]
     else
