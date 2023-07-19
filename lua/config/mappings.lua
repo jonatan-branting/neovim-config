@@ -69,7 +69,7 @@ Key.x.nowait:set("Indent", ">", ">gv")
 Key.i:set("Start of line", "<c-a>", "<c-o>g0")
 Key.i:set("End of line", "<c-e>", "<c-o>g$")
 
-Key.n:set("Search and replace", "<leader>r", ":%s///gc<left><left><left>")
+Key.v:set("Search and replace", "<c-r>", ":%s///gc<left><left><left>")
 
 -- Consistency please!
 Key.n:set("Select line", "vv", "0v$")
