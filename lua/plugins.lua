@@ -20,7 +20,7 @@ return {
         return "<cmd>Fern . -reveal=%<cr>"
       end, {
         expr = true,
-        desc = "Open File Explorer",
+        desc = "Open file explorer",
       })
     end,
   },

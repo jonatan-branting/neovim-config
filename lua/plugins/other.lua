@@ -4,7 +4,7 @@ return {
   init = function()
     vim.keymap.set("n", "<leader>r", "<cmd>:Other<CR>", {
       silent = true,
-      desc = "Open Other",
+      desc = "Open other",
     })
   end,
   config = function()

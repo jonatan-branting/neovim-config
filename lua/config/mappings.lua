@@ -23,8 +23,6 @@ Key.n.expr:set("Down", "j", function()
   return "m'" .. vim.v.count .. "j"
 end)
 
--- TODO Recreate each mapping below the cursor in the Key.<mode> style
-
 Key.x.silent.expr:set("Go up", "k", "(v:count == 0 ? 'gk' : 'k')")
 Key.x.silent.expr:set("Go down", "j", "(v:count == 0 ? 'gj' : 'j')")
 
@@ -89,7 +87,7 @@ Key.n:set("Reset current file", "<leader>gr", function()
   print("Checked out " .. vim.fn.expand("%") .. " from " .. default_branch)
 end)
 
--- Asterisk
+-- Asterisk, include in plugin spec instead
 Key.n
   :set("Search word under cursor", "*", "<Plug>(asterisk-*)")
   :set("Search word under cursor backwards", "#", "<Plug>(asterisk-#)")
@@ -103,9 +101,6 @@ Key.n
     "gz#",
     "<Plug>(asterisk-gz#)"
   )
-
--- Allow line split using S, as opposed to J(oin)
--- vim.keymap.set("n", 'S', 'i<cr><Esc>^mwgk:silent! s/\v +$//<cr>:noh<cr>')
 
 -- Nearly same as <cr>
 Key.n:set("Unmap _", "_", "<nop>")
@@ -138,6 +133,12 @@ Key.n
   :set("Window down", "<c-j>", "<c-w>j")
   :set("Window up", "<c-k>", "<c-w>k")
   :set("Window right", "<c-l>", "<c-w>l")
+
+Key.n
+  :set("Window left", "<left>", "<c-w>h")
+  :set("Window down", "<down>", "<c-w>j")
+  :set("Window up", "<up>", "<c-w>k")
+  :set("Window right", "<right>", "<c-w>l")
 
 -- readline like keybinds
 Key.n:set("Start of line", "<c-a>", "0")
@@ -240,9 +241,11 @@ Key.n.expr
     end
   end)
   :set("Indent aware insert", "i", function()
-    vim.cmd("normal! m'") -- Populate jumplist
+    vim.schedule(function()
+      vim.cmd("normal! m'") -- Populate jumplist
+    end)
     if #vim.fn.getline(".") == 0 then
-      return [["_ci]]
+      return [["_cc]]
     else
       return "i"
     end

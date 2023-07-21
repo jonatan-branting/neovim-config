@@ -1,12 +1,10 @@
 -- This module enables the following syntax to be used for mapping keys:
 -- ```
--- Key.n.desc("Save file").set("<leader>s", ":w<cr>")
-
--- Group.n
--- .desc("Alternate mappings")
--- .set("<leader>v", function(group)
---   group.set("r", ":luafile %<cr>", "Reload config")
--- end)
+-- Key.n:set("Save file", "<leader>s", ":w<cr>")
+-- Key.n
+--   :group("File", "<leader>f")
+--   :set("Save file", "s", ":w<cr>")
+--   :set("Delete file", "d", ":Delete %<cr>")
 -- ```
 
 local Key = {}

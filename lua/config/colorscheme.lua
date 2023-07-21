@@ -10,10 +10,13 @@ require("catppuccin").setup({
     treesitter = true,
     notify = true,
     mini = true,
+    neogit = true,
+    fern = true,
+    illuminate = true,
+    fidget = true,
   },
   custom_highlights = {},
   color_overrides = {},
 })
 
-vim.cmd([[ set bg=dark ]])
-vim.cmd([[ colorscheme catppuccin]])
+vim.cmd.colorscheme("catppuccin")
