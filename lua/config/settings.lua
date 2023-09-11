@@ -133,4 +133,6 @@ opt.breakindent = true
 opt.showbreak = "↳  "
 opt.clipboard = "unnamedplus"
 
+opt.startofline = true
+
 vim.g.vimsyn_embed = "l" -- Highlight Lua code inside .vim files
