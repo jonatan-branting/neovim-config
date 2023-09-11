@@ -38,6 +38,7 @@ return {
   { "mrjones2014/smart-splits.nvim" },
   {
     "vim-ruby/vim-ruby",
+    enabled = false,
     ft = "ruby",
     init = function()
       vim.g.ruby_indent_assignment_style = "variable"
