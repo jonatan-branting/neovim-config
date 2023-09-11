@@ -9,6 +9,7 @@ require("catppuccin").setup({
     gitsigns = true,
     treesitter = true,
     notify = true,
+    telescope = true,
     mini = true,
     neogit = true,
     fern = true,
