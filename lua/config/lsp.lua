@@ -42,6 +42,7 @@ local servers = {
   "solargraph",
   "html",
   "vuels",
+  "tsserver",
 }
 
 require("mason-lspconfig").setup({
