@@ -11,6 +11,10 @@ function Enumeratable:new(items)
   return instance
 end
 
+function Enumeratable:append(item)
+  table.insert(self.items, item)
+end
+
 function Enumeratable:length()
   return #self.items
 end
