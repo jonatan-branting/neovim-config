@@ -67,9 +67,12 @@ Key.v:set("Visual star", "*", function()
   vim.api.nvim_input("/" .. search .. "<cr>")
 end)
 
-vim.keymap.set("n", "<leader>gs", "<cmd>Git add %<cr>", { desc = "Git add current file" })
-vim.keymap.set("n", "<leader>gc", "<cmd>Neogit commit<cr>", { desc = "Git add current file" })
-vim.keymap.set("n", "<leader>gg", "<cmd>Neogit kind=replace<cr>", { desc = "Git add current file" })
+Key.n.silent
+  :group("Git", "<leader>g")
+  :set("Stage file", "s", "<cmd>Git add %<cr>")
+  :set("Stage all", "S", "<cmd>Git add -u<cr>")
+  :set("Commit", "c", "<cmd>Neogit commit<cr>")
+  :set("Open Neogit", "g", "<cmd>Neogit kind=replace<cr>")
 
 Key.n:set("Reset current file", "<leader>gr", function()
   local default_branch_path = vim.fn.system("git symbolic-ref refs/remotes/origin/HEAD")
@@ -199,13 +202,7 @@ end
 vim.keymap.set("n", "<leader>.", search_and_replace_last_wrapper, { expr = true })
 
 -- if this is done in a visually selected area, repeat it for all occurrences in that area
-vim.keymap.set("v", "<leader>.", ":s/<c-r>*/<c-r>./gc<cr>")
-vim.keymap.set("n", "<c-y>", "<cmd>nohl<cr>")
-
-vim.keymap.set("n", "<leader-b>", function()
-  vim.fn.setreg("/", vim.fn.getreg("*"))
-  vim.cmd([[ set hls ]])
-end)
+Key.v:set("Replay change", "<leader>.", "<esc>:s/<c-r>*/<c-r>./gc<cr>")
 
 vim.keymap.set("x", "/", "<Esc>/\\%V")
 vim.keymap.set({ "n" }, "x", "/")
