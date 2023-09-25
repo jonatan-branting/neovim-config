@@ -6,5 +6,6 @@ return {
     require("plugins.mini.indentscope")
     require("plugins.mini.misc")
     require("plugins.mini.session")
+    require("plugins.mini.clue")
   end,
 }
