@@ -1,5 +1,6 @@
 return {
   "NeoGitOrg/neogit",
+  after = "vim-fugitive",
   config = function()
     local neogit = require("neogit")
 
@@ -9,7 +10,6 @@ return {
       disable_commit_confirmation = true,
       disable_builtin_notifications = true,
       auto_refresh = true,
-      -- customize displayed signs
       signs = {
         -- { CLOSED, OPENED }
         section = { ">", "v" },
@@ -19,15 +19,22 @@ return {
       integrations = {
         diffview = true,
       },
-      -- override/add mappings
       mappings = {
-        -- modify status buffer mappings
         status = {
-          -- Adds a mapping with "B" as key that does the "BranchPopup" command
           ["B"] = "BranchPopup",
-          -- Removes the default mapping of "s"
         },
       },
     })
+
+    vim.api.nvim_create_autocmd(
+    "User",
+    {
+      pattern = "FugitiveChanged",
+      callback = function()
+        neogit.refresh_manually()
+      end,
+    }
+    )
+
   end,
 }
