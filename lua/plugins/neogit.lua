@@ -11,7 +11,6 @@ return {
       disable_builtin_notifications = true,
       auto_refresh = true,
       signs = {
-        -- { CLOSED, OPENED }
         section = { ">", "v" },
         item = { ">", "v" },
         hunk = { "", "" },
