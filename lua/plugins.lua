@@ -9,21 +9,6 @@ return {
     end,
     config = true,
   },
-  {
-    "lambdalisue/fern.vim",
-    init = function()
-      vim.g["fern#hide_cursor"] = 1
-      vim.g["fern#keepjumps_on_edit"] = 0
-      vim.g["fern#keepalt_on_edit"] = 1
-
-      vim.keymap.set("n", "<leader>o", function()
-        return "<cmd>Fern . -reveal=%<cr>"
-      end, {
-        expr = true,
-        desc = "Open file explorer",
-      })
-    end,
-  },
   { "chaoren/vim-wordmotion" },
   {
     "williamboman/mason.nvim",
@@ -35,25 +20,14 @@ return {
   { "nvim-lua/plenary.nvim" },
   { "catppuccin/nvim", lazy = false },
   { "smjonas/inc-rename.nvim", config = true },
-  { "mrjones2014/smart-splits.nvim" },
   {
-    "vim-ruby/vim-ruby",
-    enabled = false,
-    ft = "ruby",
-    init = function()
-      vim.g.ruby_indent_assignment_style = "variable"
-      vim.g.ruby_indent_hanging_elements = true
-      vim.g.ruby_indent_block_style = "do"
-      vim.g.ruby_indent_access_modifier_style = "indent"
-    end,
-  },
-  {
-    "yioneko/nvim-yati",
-    dependencies = { "yioneko/vim-tmindent" },
+    "mrjones2014/smart-splits.nvim",
+    cond = function()
+      return vim.g.neovide == nil
+    end
   },
   { "MunifTanjim/nui.nvim" },
   { "stevearc/dressing.nvim", config = true },
-  { "danymat/neogen", config = true },
   { "famiu/bufdelete.nvim" },
   { "rhysd/conflict-marker.vim" },
   { "RRethy/nvim-treesitter-endwise", event = "VimEnter", lazy = false },
@@ -61,7 +35,6 @@ return {
   { "nvim-treesitter/nvim-treesitter-textobjects", event = "VimEnter" },
   { "folke/lsp-colors.nvim" },
   { "neovim/nvim-lspconfig" },
-  { "simrat39/rust-tools.nvim" },
   { "nvim-lua/lsp-status.nvim" },
   { "tpope/vim-rhubarb" },
   { "tpope/vim-abolish" },
@@ -70,14 +43,22 @@ return {
   { "tpope/vim-fugitive" },
   { "tami5/sql.nvim" },
   { "romainl/vim-qf" },
-  { "JoosepAlviste/nvim-ts-context-commentstring" },
+  {
+    "JoosepAlviste/nvim-ts-context-commentstring",
+    init = function()
+      vim.g.skip_ts_context_commentstring_module = true
+    end,
+    config = function()
+      require("ts_context_commentstring").setup({})
+    end
+  },
   { "haya14busa/vim-asterisk" },
   { "junegunn/vim-easy-align" },
   { "tpope/vim-repeat" },
   { "tpope/vim-eunuch" },
   { "tpope/vim-sleuth" },
   { "tpope/vim-rsi" },
-  { "tpope/vim-commentary" },
+  -- { "tpope/vim-commentary" },
   { "dkarter/bullets.vim" },
   { "nvim-treesitter/playground" },
 }

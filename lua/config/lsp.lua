@@ -33,8 +33,6 @@ local on_attach = function(client, bufnr)
   if client.server_capabilities.signatureHelpProvider then
     require("modules.lsp_signature").setup(client)
   end
-
-  require("better-n").register_keys()
 end
 
 local servers = {
@@ -42,6 +40,7 @@ local servers = {
   "solargraph",
   "html",
   "vuels",
+  "lemminx",
   "tsserver",
 }
 
@@ -55,13 +54,6 @@ for _, server in ipairs(servers) do
     capabilities = capabilities,
   })
 end
-
-require("rust-tools").setup({
-  server = {
-    on_attach = on_attach,
-    capabilities = capabilities,
-  },
-})
 
 lsp_config.vuels.setup({
   on_attach = on_attach,
@@ -80,6 +72,9 @@ lsp_config.lua_ls.setup({
   on_attach = on_attach,
   settings = {
     Lua = {
+      workspace = {
+        checkThirdParty = "Disable",
+      },
       format = {
         enable = false,
       },

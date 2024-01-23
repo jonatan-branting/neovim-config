@@ -40,8 +40,8 @@ return {
           },
         },
         filetypes = {
-          yaml = false,
-          markdown = false,
+          yaml = true,
+          markdown = true,
           help = false,
           gitcommit = false,
           gitrebase = false,
@@ -55,9 +55,6 @@ return {
         copilot_node_command = vim.fn.expand("$HOME") .. "/.local/share/nvm/v16.17.1/bin/node",
         plugin_manager_path = vim.fn.stdpath("data") .. "/site/pack/packer",
         server_opts_overrides = {
-          advanced = {
-            length = 1,
-          },
         },
       })
     end, 100)

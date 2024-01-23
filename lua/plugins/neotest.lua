@@ -4,6 +4,7 @@
 return {
   "nvim-neotest/neotest",
   dependencies = {
+    { "nvim-treesitter/nvim-treesitter" },
     { "nvim-neotest/neotest-plenary" },
     { "nvim-neotest/neotest-python" },
     { "nvim-neotest/neotest-vim-test" },
@@ -12,20 +13,34 @@ return {
     { "olimorris/neotest-rspec" },
   },
   init = function()
-    vim.api.nvim_create_autocmd("FileType", {
-      pattern = "lua",
-      callback = function(args)
-        vim.keymap.set("n", "<leader>tn", function()
-          require("neotest").run.run()
-        end, { buffer = args.buf })
-        vim.keymap.set("n", "<leader>tf", function()
-          require("neotest").run.run(vim.fn.expand("%"))
-        end, { buffer = args.buf })
-      end,
-    })
+    local Key = require("lib.key")
+    -- vim.api.nvim_create_autocmd("FileType", {
+    --   pattern = "lua",
+    --   callback = function(args)
+    --     print("Setting up neotest for lua")
+    --     vim.keymap.set("n", "<leader>tn", function()
+    --       require("neotest").run.run()
+    --     end, { buffer = args.buf })
+    --     vim.keymap.set("n", "<leader>tf", function()
+    --       require("neotest").run.run(vim.fn.expand("%"))
+    --     end, { buffer = args.buf })
+    --     Key.n:set("Toggle output panel", "<leader>tp", require("neotest").output_panel.toggle)
+    --   end,
+    -- })
   end,
   config = function()
+    require("neotest-minitest")({
+      test_cmd = function()
+        return vim.tbl_flatten({
+          "bundle",
+          "exec",
+          "rails",
+          "test",
+        })
+      end
+    })
     require("neotest").setup({
+      log_level = vim.log.levels.DEBUG,
       icons = {
         -- I dont like the summary window at all
         expanded = "2",
@@ -52,11 +67,11 @@ return {
         open_on_true = false,
       },
       quickfix = {
-        open = false,
+        open = true,
       },
-      consumers = {
-        function(client) end,
-      },
+      -- consumers = {
+      --   function(client) end,
+      -- },
       adapters = {
         require("neotest-plenary"),
         -- require("neotest-python")({

@@ -1,7 +1,7 @@
 vim.api.nvim_create_autocmd("VimEnter", {
   group = group,
   callback = function(args)
-    -- Return unless we have a filed opened already
+    -- Return if we have a file opened already
     if args.file == "*" or args.file ~= "" then
       return
     end

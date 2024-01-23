@@ -38,7 +38,7 @@ Key.x.nowait:set("Indent", ">", ">gv")
 
 -- Allow terminal style navigation in insert mode
 Key.i:set("Start of line", "<c-a>", "<c-o>g0")
-Key.i:set("End of line", "<c-e>", "<c-o>g$")
+-- Key.i:set("End of line", "<c-e>", "<c-o>g$")
 
 Key.v:set("Search and replace", "<c-r>", ":%s///gc<left><left><left>")
 
@@ -143,12 +143,9 @@ Key.n
   :set("Window up", "<up>", "<c-w>k")
   :set("Window right", "<right>", "<c-w>l")
 
--- readline like keybinds
-Key.n:set("Start of line", "<c-a>", "0")
-Key.n:set("End of line", "<c-e>", "$")
 
 -- TODO this should just be part of the context menu!
-vim.keymap.set("n", "<leader>vr", function()
+vim.keymap.set("n", "<leader>nr", function()
   return ":IncRename " .. vim.fn.expand("<cword>")
 end, { expr = true })
 
@@ -157,20 +154,12 @@ vim.keymap.set({ "x", "n" }, "p", "p=']", {})
 vim.keymap.set({ "x", "n" }, "gh", "^", {})
 vim.keymap.set({ "x", "n" }, "gl", "$", {})
 
-vim.keymap.set({ "n", "x" }, "<s-n>", require("better-n").shift_n, { nowait = true })
-vim.keymap.set({ "n", "x" }, "n", require("better-n").n, { nowait = true })
-
 vim.keymap.set({ "n", "o", "x" }, "<c-w>", "w")
 vim.keymap.set("i", "jj", "<esc>")
 
--- dont overwrite clipboard when pasting from visual mode
--- vim.keymap.set("n", "<cr>", "o<esc>0\"_D")
--- vim.keymap.set("n", "<s-cr>", "O<esc>0\"_D")
-
-vim.keymap.set("t", "<esc>", "<c-\\><c-n>")
-
-vim.keymap.set("n", "<c-u>", "<c-u>zz")
-vim.keymap.set("n", "<c-d>", "<c-d>zz")
+Key.t:set("Leave terminal mode", "<esc>", "<c-\\><c-n>")
+Key.n:set("Scroll page down", "<c-d>", "<c-d>zz")
+Key.n:set("Scroll page up", "<c-u>", "<c-u>zz")
 
 -- clear line, but keep it
 vim.keymap.set("n", "X", "ddO<esc>")
@@ -255,3 +244,17 @@ Key.n
   :set("Toggle terminal", "<leader>l", function()
     require("modules.term"):get_terminal():toggle()
   end)
+
+Key.n
+  :set("Sync cwd with terminal", "<leader>cd", function()
+    require("modules.term"):get_terminal():send("cd " .. vim.fn.getcwd())
+  end)
+Key.n
+:set("Run current file in terminal", "<leader>cr", function()
+  require("modules.term"):get_terminal():send(vim.fn.expand("%:p"))
+end)
+
+Key.t:set("Paste", "<d-v>", "<c-\\><c-n>\"+pgi")
+Key.n:set("Paste", "<d-v>", "\"+p")
+Key.c:set("Paste", "<d-v>", "<c-r>+")
+Key.v:set("Paste", "<d-v>", "\"+p")

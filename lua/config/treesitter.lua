@@ -3,9 +3,6 @@ local treesitter = require("nvim-treesitter.configs")
 treesitter.setup({
   sync_install = false,
   auto_install = true,
-  context_commentstring = {
-    enable = true,
-  },
   autopairs = {
     enable = true,
   },

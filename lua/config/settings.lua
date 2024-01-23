@@ -2,9 +2,6 @@ local opt = vim.opt
 
 vim.g.mapleader = " "
 
--- DEFAULT_BORDERS = { '┏', '━', '┓', '┃', '┛', '━', '┗', '┃' }
--- DEFAULT_BORDERS = { topleft = '┏', horiz = '━', topright = '┓', vert = '┃', botright = '┛', botleft ='┗', vertleft = '┣', vertright = '┫', horizup = "┳", horizdown = "┻", verthoriz = "╋" }
-
 DEFAULT_BORDERS = {
   horiz = "━",
   vert = "┃",
@@ -33,7 +30,7 @@ vim.opt.fillchars = {
 group = vim.api.nvim_create_augroup("CoreSettings", {})
 vim.api.nvim_create_autocmd({ "WinEnter", "WinNew", "BufWinEnter" }, {
   group = group,
-  callback = function(args)
+  callback = function(_args)
     vim.schedule(function()
       if not vim.wo.relativenumber then
         vim.opt_local.statuscolumn = ""
@@ -41,16 +38,11 @@ vim.api.nvim_create_autocmd({ "WinEnter", "WinNew", "BufWinEnter" }, {
       end
 
       vim.opt_local.statuscolumn = "%=%{v:relnum ? v:relnum : v:lnum} %s%C"
-      -- vim.opt.numberwidth = 3
-      -- vim.opt_local.statuscolumn = "%=%{v:virtnum < 1 ? (v:relnum ? v:relnum : v:lnum < 10 ? v:lnum . '  ' : v:lnum) : ''}%=%s"
     end)
   end,
 })
 
 vim.o.statuscolumn = ""
--- vim.o.statuscolumn = "%!v:lua.status_column_func()"
-
--- vim.opt.fillchars = DEFAULT_BORDERS
 opt.termguicolors = true
 opt.cmdheight = 1
 
@@ -69,6 +61,7 @@ opt.updatetime = 2000
 opt.shortmess = "filnxtToOFcI"
 opt.hidden = true
 opt.mouse = "a"
+opt.cursorline = true
 
 opt.inccommand = "nosplit"
 
@@ -100,9 +93,6 @@ opt.backup = false
 opt.writebackup = false
 opt.equalalways = true
 
--- opt.foldlevel = 99
--- opt.foldenable = true
-
 opt.visualbell = true
 opt.errorbells = false
 
@@ -110,8 +100,6 @@ opt.smartcase = true
 opt.ignorecase = true
 opt.hlsearch = true
 opt.incsearch = true
-
--- opt.shell = "zsh"
 
 opt.timeoutlen = 500
 opt.linebreak = true

@@ -3,37 +3,71 @@ return {
   config = function()
     require("flatten").setup({
       callbacks = {
-        pre_open = function()
-          -- Close toggleterm when an external open request is received
-          -- require("toggleterm").toggle(0)
-        end,
-        post_open = function(bufnr, winnr, ft)
-          if ft == "gitcommit" then
-            -- If the file is a git commit, create one-shot autocmd to delete it on write
-            -- If you just want the toggleable terminal integration, ignore this bit and only the
-            -- code in the else block
-            vim.api.nvim_create_autocmd("BufWritePost", {
-              buffer = bufnr,
-              once = true,
-              callback = function()
-                -- This is a bit of a hack, but if you run bufdelete immediately
-                -- the shell can occasionally freeze
-                vim.defer_fn(function()
-                  vim.api.nvim_buf_delete(bufnr, {})
-                end, 100)
-              end,
-            })
-          else
-            -- If it's a normal file, then reopen the terminal, then switch back to the newly opened window
-            -- This gives the appearance of the window opening independently of the terminal
-            -- require("toggleterm").toggle(0)
-            vim.api.nvim_set_current_win(winnr)
-          end
-        end,
-        block_end = function()
-          -- After blocking ends (for a git commit, etc), reopen the terminal
-          -- require("toggleterm").toggle(0)
-        end,
+        ---Called to determine if a nested session should wait for the host to close the file.
+        ---@param argv table a list of all the arguments in the nested session
+        ---@return boolean
+        should_block = require("flatten").default_should_block,
+        ---If this returns true, the nested session will be opened.
+        ---If false, default behavior is used, and
+        ---config.nest_if_no_args is respected.
+        ---@type fun(host: channel):boolean
+        should_nest = require("flatten").default_should_nest,
+        ---Called before a nested session is opened.
+        pre_open = function() end,
+        ---Called after a nested session is opened.
+        ---@param bufnr buffer
+        ---@param winnr window
+        ---@param filetype string
+        ---@param is_blocking boolean
+        ---@param is_diff boolean
+        post_open = function(bufnr, winnr, filetype, is_blocking, is_diff) end,
+        ---Called when a nested session is done waiting for the host.
+        ---@param filetype string
+        block_end = function(filetype) end,
+      },
+      block_for = {
+        gitcommit = true,
+        gitrebase = true,
+      },
+      allow_cmd_passthrough = true,
+      -- Allow a nested session to open if Neovim is opened without arguments
+      nest_if_no_args = false,
+      -- Window options
+      window = {
+        -- Options:
+        -- current        -> open in current window (default)
+        -- alternate      -> open in alternate window (recommended)
+        -- tab            -> open in new tab
+        -- split          -> open in split
+        -- vsplit         -> open in vsplit
+        -- smart          -> smart open (avoids special buffers)
+        -- OpenHandler    -> allows you to handle file opening yourself (see Types)
+        --
+        open = "current",
+        -- Options:
+        -- vsplit         -> opens files in diff vsplits
+        -- split          -> opens files in diff splits
+        -- tab_vsplit     -> creates a new tabpage, and opens diff vsplits
+        -- tab_split      -> creates a new tabpage, and opens diff splits
+        -- OpenHandler    -> allows you to handle file opening yourself (see Types)
+        diff = "tab_vsplit",
+        -- Affects which file gets focused when opening multiple at once
+        -- Options:
+        -- "first"        -> open first file of new files (default)
+        -- "last"         -> open last file of new files
+        focus = "first",
+      },
+      -- Override this function to use a different socket to connect to the host
+      -- On the host side this can return nil or the socket address.
+      -- On the guest side this should return the socket address
+      -- or a non-zero channel id from `sockconnect`
+      -- flatten.nvim will detect if the address refers to this instance of nvim, to determine if this is a host or a guest
+      pipe_path = require("flatten").default_pipe_path,
+      -- The `default_pipe_path` will treat the first nvim instance within a single kitty/wezterm session as the host
+      -- You can configure this behaviour using the following opt-in integrations:
+      one_per = {
+        kitty = false, -- Flatten all instance in the current Kitty session
+        wezterm = true, -- Flatten all instance in the current Wezterm session
       },
     })
   end,

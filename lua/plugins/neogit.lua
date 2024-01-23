@@ -20,7 +20,6 @@ return {
       },
       mappings = {
         status = {
-          ["B"] = "BranchPopup",
         },
       },
     })
@@ -30,6 +29,9 @@ return {
     {
       pattern = "FugitiveChanged",
       callback = function()
+        -- TODO: This requires a filename, so we should find all staged files
+        -- in the current Git index, as well as what Neogit *thinks* is staged,
+        -- and then refresh all of those.
         neogit.refresh_manually()
       end,
     }

@@ -7,13 +7,35 @@
 --   :set("Delete file", "d", ":Delete %<cr>")
 -- ```
 
+local possible_modes = {
+  n = "n",
+  i = "i",
+  v = "v",
+  x = "x",
+  o = "o",
+  t = "t",
+  c = "c",
+  s = "s",
+  l = "l",
+  ["!"] = "!",
+}
+
+local possible_flags = {
+  silent = { silent = true },
+  expr = { expr = true },
+  nowait = { nowait = true },
+  remap = { remap = true },
+}
+
 local Key = {}
 
 -- This allows us to use `Key.n` instead of `Key:new().n`
 setmetatable(Key, {
   __index = function(_, k)
-    -- TODO: This stack-overflows when we try to access a key that
-    -- doesn't exist
+    if possible_modes[k] == nil and possible_flags[k] == nil then
+      return nil
+    end
+
     return Key:new()[k]
   end,
 })
@@ -29,25 +51,6 @@ function Key:new()
 
   -- This allows us to chain modes like this : `Key.n.o.x`
   self.__index = function(_, k)
-    local possible_modes = {
-      n = "n",
-      i = "i",
-      v = "v",
-      x = "x",
-      o = "o",
-      t = "t",
-      c = "c",
-      s = "s",
-      l = "l",
-      ["!"] = "!",
-    }
-
-    local possible_flags = {
-      silent = { silent = true },
-      expr = { expr = true },
-      nowait = { nowait = true },
-    }
-
     if possible_modes[k] ~= nil then
       table.insert(instance.modes, possible_modes[k])
       return instance
@@ -67,7 +70,7 @@ function Key:__call(...)
 end
 
 function Key:group(desc, group)
-  -- TODO: Add a way to set the group description, possibly this is which-key specific
+  -- TODO: Add a way to set the group description
   self._group = group
 
   return self

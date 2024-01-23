@@ -149,6 +149,8 @@ cmp.setup({
         fallback()
       end
     end),
+    -- Show snippet autocomplete on c-space
+    ["<c-space>"] = cmp.mapping.complete({ config = { sources = { { name = "luasnip" } }}}),
     ["<c-j>"] = cmp.mapping(function(fallback)
       if cmp.core.view.docs_view:visible() then
         cmp.mapping(cmp.scroll_docs(4))
